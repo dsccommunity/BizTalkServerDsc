@@ -3,9 +3,16 @@
 
     DscResourcesToExport = @('BizTalkServerHost', 'BizTalkServerHostInstance', 'BizTalkServerAdapter', 'BizTalkServerSendHandler', 'BizTalkServerReceiveHandler')
 
-    CmdLetsToExport = ''
+    NestedModules = @(
+        'DscClassResources\BizTalkServerAdapter\BizTalkServerAdapter.psd1'
+        'DscClassResources\BizTalkServerHost\BizTalkServerHost.psd1'
+        'DscClassResources\BizTalkServerHostInstance\BizTalkServerHostInstance.psd1'
+        'DscClassResources\BizTalkServerReceiveHandler\BizTalkServerReceiveHandler.psd1'
+        'DscClassResources\BizTalkServerSendHandler\BizTalkServerSendHandler.psd1'
+    )
+    #CmdLetsToExport = ''
 
-    FunctionsToExport = ''
+    #FunctionsToExport = ''
 
     # Version number of this module.
     ModuleVersion = '0.1.1.4'
