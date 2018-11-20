@@ -1,8 +1,8 @@
 ﻿@{
     RootModule = "MSFT_BizTalkServer.psm1"
 
-    DscResourcesToExport = @('BizTalkServerHost','BizTalkServerHostInstance','BizTalkServerAdapter','BizTalkServerSendHandler','BizTalkServerReceiveHandler')
-    
+    DscResourcesToExport = @('BizTalkServerHost', 'BizTalkServerHostInstance', 'BizTalkServerAdapter', 'BizTalkServerSendHandler', 'BizTalkServerReceiveHandler')
+
     CmdLetsToExport = ''
 
     FunctionsToExport = ''
@@ -14,7 +14,7 @@
     GUID = 'BDFD5A0E-C922-4FE3-BDC3-107E0DAD6FF8'
 
     # Author of this module
-    Author = 'Pieter van der Merwe'
+    Author = 'Pieter van der Merwe, Chris Gardner'
 
     # Company or vendor of this module
     CompanyName = ''
