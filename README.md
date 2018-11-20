@@ -1,5 +1,7 @@
 # BizTalkServer
 
+**This module is maintained by members of Black Marble staff and not Black Marble itself. Support is offered on a best effort basis by these maintainers.**
+
 Module for managing BizTalk Server resources. BizTalk Server must be installed on the machine where the DSC configuration is run.
 
 ## Resources
