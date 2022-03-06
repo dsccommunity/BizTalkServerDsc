@@ -1,5 +1,5 @@
 ﻿@{
-    RootModule = "BizTalkServer.psm1"
+    RootModule = "BizTalkServerDsc.psm1"
 
     DscResourcesToExport = @(
         'BizTalkServerHost'
@@ -27,13 +27,13 @@
     AliasesToExport = @()
 
     # Version number of this module.
-    ModuleVersion = '0.1.1.4'
+    ModuleVersion = '0.1.0.0'
 
     # ID used to uniquely identify this module
-    GUID = 'BDFD5A0E-C922-4FE3-BDC3-107E0DAD6FF8'
+    GUID = '75c75856-75ca-451b-8255-5f3e9eaae6e2'
 
     # Author of this module
-    Author = 'Pieter van der Merwe, Chris Gardner'
+    Author = 'Ilian Nilsson, inherited work from Pieter van der Merwe, Chris Gardner'
 
     # Company or vendor of this module
     CompanyName = ''
@@ -42,7 +42,7 @@
     Description = 'BizTalk Server DSC Resources'
 
     # Minimum version of the Windows PowerShell engine required by this module
-    PowerShellVersion = '5.0'
+    PowerShellVersion = '5.1'
 
     # Name of the Windows PowerShell host required by this module
     # PowerShellHostName = ''
@@ -55,10 +55,10 @@
             Tags = @('DSC', 'BizTalk')
 
             # A URL to the license for this module.
-            LicenseUri = 'https://github.com/blackmarble/BizTalkServer/blob/master/LICENSE'
+            LicenseUri = 'https://github.com/IlleNilsson/BizTalkServerDsc/blob/master/LICENSE'
 
             # A URL to the main website for this project.
-            ProjectUri = 'https://github.com/blackmarble/BizTalkServer'
+            ProjectUri = 'https://github.com/IlleNilsson/BizTalkServerDsc'
 
             # A URL to an icon representing this module.
             # IconUri = ''

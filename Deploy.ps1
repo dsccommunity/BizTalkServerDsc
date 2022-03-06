@@ -1,13 +1,11 @@
 ﻿$moduleName = 'BizTalkServer'
-$moduleVersion = '0.1.1.0'
+$moduleVersion = '0.1.0'
 
 $location = Split-Path -parent $PSCommandPath
 
 $destination = "$env:ProgramFiles\WindowsPowerShell\Modules\$moduleName\$moduleversion"
 
-Remove-Item -Path $env:ProgramFiles\WindowsPowerShell\Modules\$moduleName -Force -Recurse
-
-mkdir $env:ProgramFiles\WindowsPowerShell\Modules\$moduleName -Force
+Remove-Item -Path $destination -Force -Recurse
 
 mkdir $destination -Force
 
@@ -17,9 +15,9 @@ mkdir $destination\Tests -Force
 
 #Resources and Manifest
 
-get-childitem -path $location -filter BizTalkServer.psd1 -recurse | copy-item -destination $destination
+get-childitem -path $location -filter BizTalkServerDsc.psd1 -recurse | copy-item -destination $destination
 
-get-childitem -path $location -filter MSFT_BizTalkServer.psm1 -recurse | copy-item -destination $destination
+get-childitem -path $location -filter MSFT_BizTalkServerDsc.psm1 -recurse | copy-item -destination $destination
 
 get-childitem -path $location -filter README.md -recurse | copy-item -destination $destination
 
@@ -33,7 +31,7 @@ Copy-Item -Path $location\Tests\* -Destination $destination\Tests  -Recurse -Ver
 
 # Script Analyzer
 
-Invoke-ScriptAnalyzer -Path C:\Development\Integration\Deployment\Dsc\Modules\BizTalkServer
+Invoke-ScriptAnalyzer -Path $destination
 
 #Publish Module
 

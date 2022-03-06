@@ -1,6 +1,6 @@
 # BizTalkServer
 
-**This module is maintained by members of Black Marble staff and not Black Marble itself. Support is offered on a best effort basis by these maintainers.**
+**This module is maintained by Ilian Nilsson, Visity AB**
 
 Module for managing BizTalk Server resources. BizTalk Server must be installed on the machine where the DSC configuration is run.
 
@@ -57,36 +57,5 @@ Module for managing BizTalk Server resources. BizTalk Server must be installed o
 
 ### Unreleased
 
-### 0.1.1.4
+### 0.1.0
 
-* Release with the following fixes:
-    * Test for the BizTalk Host Instance did not include the server name
-
-### 0.1.1.3
-
-* Release with the following fixes:
-    * Escaping the '\' character in WQL queries
-
-### 0.1.1.2
-
-* Release with the following fixes:
-    * Made Credential property standard
-
-### 0.1.1.1
-
-* Release with the following fixes:
-    * All resources updated to allow for the reconfiguration of existing instances
-    * All resources now accept Credentials
-
-### 0.1.1.0
-
-* Release with the following additional resources:
-    * BizTalkServerAdapter
-    * BizTalkServerSendHandler
-    * BizTalkServerReceiveHandler
-
-### 0.1.0.0
-
-* Initial release with the following resources:
-    * BizTalkServerHost
-    * BizTalkServerHostInstance
