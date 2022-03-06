@@ -57,5 +57,5 @@ Module for managing BizTalk Server resources. BizTalk Server must be installed o
 
 ### Unreleased
 
-### 0.1.0
+### 0.2.0
 

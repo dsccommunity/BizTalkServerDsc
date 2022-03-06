@@ -1,5 +1,5 @@
-﻿$moduleName = 'BizTalkServer'
-$moduleVersion = '0.1.0'
+﻿$moduleName = 'BizTalkServerDsc'
+$moduleVersion = '0.2.0'
 
 $location = Split-Path -parent $PSCommandPath
 

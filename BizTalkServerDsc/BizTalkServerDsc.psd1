@@ -27,7 +27,7 @@
     AliasesToExport = @()
 
     # Version number of this module.
-    ModuleVersion = '0.1.0.0'
+    ModuleVersion = '0.2.0'
 
     # ID used to uniquely identify this module
     GUID = '75c75856-75ca-451b-8255-5f3e9eaae6e2'
