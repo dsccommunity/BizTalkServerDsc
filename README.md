@@ -1,6 +1,6 @@
 # BizTalkServerDsc
 
-**This module is maintained by Ilian Nilsson, Visity AB**
+**This module is maintained by Ilian Nilsson, domain AB**
 
 Module for managing BizTalk Server resources. BizTalk Server must be installed on the machine where the DSC configuration is run.
 
