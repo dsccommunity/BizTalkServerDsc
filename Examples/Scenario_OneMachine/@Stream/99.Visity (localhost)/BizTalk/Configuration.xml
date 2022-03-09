@@ -1,0 +1,214 @@
+<Configuration>
+  <Feature Name="SSOServer,Engine" DisplayName="Enterprise Single Sign-On" Version="1.0" Description="Enterprise Single Sign-On configuration" ConfigByDefault="true">
+    <Question ID="IsSecretServer" Text="&amp;Create a new SSO system;&amp;Join an existing SSO system" Answers="Create,Join" Default="Create">
+      <Answer Value="Create" GUID="{FB7268BE-82D4-4cad-8CFF-6930303DA7E2}" Selected="Yes">
+        <NTCredential ID="SSOAdminGroup" DisplayName="SSO Administrator(s)" Description="This is the Administrator of the Enterprise Single Sign-On (SSO) system.">
+          <NTAccount ScopeType="105" UpLevelFlags="672" DownLevelFlags="2147516422">SSO Administrators</NTAccount>
+        </NTCredential>
+        <NTCredential ID="SSOAffiliateAdminGroup" DisplayName="SSO Affiliate Administrator(s)" Description="The SSO Affiliate Administrator must be able to create Affiliate Applications.">
+          <NTAccount ScopeType="105" UpLevelFlags="672" DownLevelFlags="2147516422">SSO Affiliate Administrators</NTAccount>
+        </NTCredential>
+        <FILE ID="SSO_ID_BACKUP_SECRET_FILE" DisplayName="&amp;Backup file location:" Filter="Backup files (*.bak)|*.bak|All files (*.*)|*.*" DefaultExtension="bak" Title="" Description="Location where the master secret will be backed up" OpenFile="true">
+          <Value>C:\Temp\BizTalk SSO Backup secret file.bak</Value>
+        </FILE>
+        <Name ID="SSO_ID_BACKUP_SECRET_PASSWORD" DisplayName="&amp;Secret backup password:" Description="Enter a password used to protect the secret backup file" Hidden="true">
+          <Value>*******</Value>
+        </Name>
+        <Name ID="SSO_ID_BACKUP_SECRET_PASSWORD_CONFIRM" DisplayName="&amp;Confirm password:" Description="Confirm the secret backup password" Hidden="true">
+          <Value>*******</Value>
+        </Name>
+        <Name ID="SSO_ID_BACKUP_SECRET_REMINDER" DisplayName="Password &amp;reminder:" Description="Enter a phrase to help you remember the secret backup file password" Hidden="false">
+          <Value>Inproc Pwd</Value>
+        </Name>
+      </Answer>
+      <Answer Value="Join" GUID="{B9432756-1620-4bec-8CD9-E6D0B7805AA5}" />
+    </Question>
+    <NTService ID="ENTSSO" DisplayName="Enterprise Single Sign-On Service" Description="Specify the name of the account under which the Single Sign-On (SSO) service should run. This account must be a member of the SSO Administrator(s) group.">
+      <UserName>BtsInProcess</UserName>
+      <Domain>*******</Domain>
+      <Password>*******</Password>
+    </NTService>
+    <SQL ID="SSO_DB_ID" DisplayName="SSO Database" Description="Specify the name of the SQL Server and Database that will be used as the credential store.">
+      <Server>DESKTOP-LCRD6AV</Server>
+      <Database>SSODB</Database>
+      <WindowsSecurity Editable="no">yes</WindowsSecurity>
+      <UserName>BtsInProcess</UserName>
+      <Password>*******</Password>
+    </SQL>
+  </Feature>
+  <Feature Name="WMI" DisplayName="BizTalk Server Group" Version="1.0" Description="The Microsoft Windows Management Instrumentation (WMI) layer encapsulates all administrative functions and management capabilities for BizTalk Server." ConfigByDefault="true">
+    <SQL ID="{D757DBF9-5D71-4995-9F20-A552B7DFE7F1}" DisplayName="BizTalk Management Database" Description="This database is the central meta-information store for all BizTalk Servers.">
+      <Server>DESKTOP-LCRD6AV</Server>
+      <Database>BizTalkMgmtDb</Database>
+      <WindowsSecurity Editable="no">yes</WindowsSecurity>
+      <UserName>BtsInProcess</UserName>
+      <Password>*******</Password>
+    </SQL>
+    <Question ID="CREATEORJOIN" Text="Create a &amp;new BizTalk Group;&amp;Join an existing BizTalk Group" Answers="Create,Join" Default="Create">
+      <Answer Value="Create" GUID="{C4DEF4B8-163E-4a8d-AB01-6C43917248B1}" Selected="Yes">
+        <SQL ID="{84ADD76E-EBEB-4bb8-B9EB-64F87E483C39}" DisplayName="BizTalk MessageBox Database" Description="This database stores subscriptions predicates. It is a host platform, where the queues and state tables for each BizTalk Server host are kept. The MessageBox database also stores the messages and message properties.">
+          <Server>DESKTOP-LCRD6AV</Server>
+          <Database>BizTalkMsgBoxDb</Database>
+          <WindowsSecurity Editable="no">yes</WindowsSecurity>
+          <UserName>BtsInProcess</UserName>
+          <Password>*******</Password>
+        </SQL>
+        <SQL ID="{1033195A-3C23-4750-BBD0-06BC12A175D4}" DisplayName="BizTalk Tracking Database" Description="This database stores business and health monitoring data tracked by the BizTalk Server tracking engine.">
+          <Server>DESKTOP-LCRD6AV</Server>
+          <Database>BizTalkDTADb</Database>
+          <WindowsSecurity Editable="no">yes</WindowsSecurity>
+          <UserName>BtsInProcess</UserName>
+          <Password>*******</Password>
+        </SQL>
+        <NTCredential ID="BTS_ADMIN_GROUP" DisplayName="BizTalk Administrators Group" Description="The BizTalk Server Administrators Group has the least privileges necessary to perform administrative tasks included in the Configuration Framework Wizard and to administer the BizTalk Server environment after installation.">
+          <NTAccount ScopeType="105" UpLevelFlags="672" DownLevelFlags="2147483654">BizTalk Server Administrators</NTAccount>
+        </NTCredential>
+        <NTCredential ID="BTS_OPERATOR_GROUP" DisplayName="BizTalk Operators Group" Description="The BizTalk Server Operators Group has the least privileges necessary to perform tasks required for operating the BizTalk Server environment after installation.">
+          <NTAccount ScopeType="105" UpLevelFlags="672" DownLevelFlags="2147483654">BizTalk Server Operators</NTAccount>
+        </NTCredential>
+        <NTCredential ID="BTS_B2B_OPERATOR_GROUP" DisplayName="BizTalk B2B Operators Group" Description="The BizTalk Server B2B Operators Group has the least privileges necessary to perform tasks required for operating the BizTalk Server B2B environment after installation.">
+          <NTAccount ScopeType="105" UpLevelFlags="672" DownLevelFlags="2147483654">BizTalk Server B2B Operators</NTAccount>
+        </NTCredential>
+        <NTCredential ID="BTS_READONLY_USER_GROUP" DisplayName="BizTalk Read Only Users Group" Description="The BizTalk Server ReadOnly Users Group has the least privileges necessary to view Artifact, Service, Message and Tracking Information.">
+          <NTAccount ScopeType="105" UpLevelFlags="672" DownLevelFlags="2147483654">BizTalk Server Read Only Users</NTAccount>
+        </NTCredential>
+      </Answer>
+      <Answer Value="Join" GUID="{4D12E6A3-552E-4936-9DD3-59E1190FA324}" />
+    </Question>
+  </Feature>
+  <Feature Name="Engine,BTSCfg" DisplayName="BizTalk Server runtime components" Version="1.0" Description="These settings determine the manner in which the BizTalk hosts and host instances are created." ConfigByDefault="true">
+    <Question ID="HOST" Text="&amp;Create In-Process Host and Instance" Answers="Yes,No" Default="Yes">
+      <Answer Value="Yes" GUID="{8E714C78-05B8-45d1-9B50-D737EF7AD682}" Selected="Yes">
+        <Question ID="TRUSTEDHOST" Text="&amp;Trusted" Answers="Yes,No" Default="Yes">
+          <Answer Value="Yes" GUID="{D460CE6D-CCF1-4ebf-BDC9-3149021B91ED}" Selected="Yes" />
+          <Answer Value="No" GUID="{F507BD3D-2205-47bc-A7EF-0E45603BB6C4}" />
+        </Question>
+        <Question ID="GENERICHOST" Text="32-bit on&amp;ly" Answers="Yes,No" Default="Yes">
+          <Answer Value="Yes" GUID="{5D3B2217-D744-4D50-B931-FED9E259628D}" Selected="Yes" />
+          <Answer Value="No" GUID="{CBF077AE-2771-473E-9E0C-D955D5EB5692}" />
+        </Question>
+        <NTCredential ID="BTS_HOST_GROUP" DisplayName="BizTalk Host Users Group" Description="Windows group for accounts with access to the In-Process BizTalk  hosts (hosts processes in the BizTalk Server).">
+          <NTAccount ScopeType="105" UpLevelFlags="672" DownLevelFlags="2147483654">BizTalk Application Users</NTAccount>
+        </NTCredential>
+        <Name ID="BTS_HOST_NAME" DisplayName="Ho&amp;st name:" Description="Name of the In-Process BizTalk  host (eg, BizTalkServerApplication)" Hidden="false">
+          <Value>BizTalkServerApplication</Value>
+        </Name>
+        <NTService ID="{B64F63FA-E24E-4991-86F0-ED9F65B68A98}" DisplayName="BizTalk Host Instance Account" Description="Windows account with access to a specific In-Process BizTalk host instance. This account will be given Log on as Service rights.">
+          <UserName>BtsInProcess</UserName>
+          <Domain>*******</Domain>
+          <Password>*******</Password>
+          <IsGmsaAccount>false</IsGmsaAccount>
+        </NTService>
+      </Answer>
+      <Answer Value="No" GUID="{D9164C48-8179-4a40-912D-1BF4C3EFE70B}" />
+    </Question>
+    <Question ID="ISOHOST" Text="Cr&amp;eate Isolated Host and Instance" Answers="Yes,No" Default="Yes">
+      <Answer Value="Yes" GUID="{5638D8B2-58C9-4b2a-B5B1-3771ADECC327}" Selected="Yes">
+        <Question ID="TRUSTEDIHOST" Text="Truste&amp;d" Answers="Yes,No" Default="No">
+          <Answer Value="Yes" GUID="{D460CE6D-CCF1-4ebf-BDC9-3149021B91ED}" />
+          <Answer Value="No" GUID="{F507BD3D-2205-47bc-A7EF-0E45603BB6C4}" Selected="Yes" />
+        </Question>
+        <Question ID="GENERICIHOST" Text="32-bit onl&amp;y" Answers="Yes,No" Default="Yes">
+          <Answer Value="Yes" GUID="{5D3B2217-D744-4D50-B931-FED9E259628D}" Selected="Yes" />
+          <Answer Value="No" GUID="{CBF077AE-2771-473E-9E0C-D955D5EB5692}" />
+        </Question>
+        <NTCredential ID="BTS_IHOST_GROUP" DisplayName="BizTalk Isolated Host Users Group" Description="Windows group for accounts with access to the Isolated BizTalk hosts (hosts processes not running on BizTalk Server, such as HTTP and SOAP)">
+          <NTAccount ScopeType="105" UpLevelFlags="672" DownLevelFlags="2147483654">BizTalk Isolated Host Users</NTAccount>
+        </NTCredential>
+        <Name ID="BTS_IHOST_NAME" DisplayName="Is&amp;olated Host name:" Description="Name of the Isolated BizTalk host (eg BizTalkServerIsolatedHost)" Hidden="false">
+          <Value>BizTalkServerIsolatedHost</Value>
+        </Name>
+        <NTService ID="{D0A37CEE-F24E-4193-A19F-47B05D7EDA21}" DisplayName="BizTalk Isolated Host Instance Account" Description="Windows account with access to a specific Isolated BizTalk  host instance. This account will be given Log on as Service rights.">
+          <UserName>BtsIsolated</UserName>
+          <Domain>*******</Domain>
+          <Password>*******</Password>
+          <IsGmsaAccount>false</IsGmsaAccount>
+        </NTService>
+      </Answer>
+      <Answer Value="No" GUID="{5782A1A5-8578-4942-9CBB-E443A15A0B99}" />
+    </Question>
+  </Feature>
+  <Feature Name="MOT" DisplayName="BAM runtime" Version="1.0" Description="Tracking data decoding service used to move tracked data and persist it for query use." />
+  <Feature Name="RestApi" DisplayName="BizTalk REST APIs" Version="1.0" Description="BizTalk Server REST APIs for management and operational data" ConfigByDefault="true">
+    <NTService ID="{0FAD4E63-B5DB-4C43-8569-C8F80EA266FC}" DisplayName="Management Service" Description="Management Service">
+      <UserName>BtsInProcess</UserName>
+      <Domain>*******</Domain>
+      <Password>*******</Password>
+      <IsGmsaAccount>False</IsGmsaAccount>
+    </NTService>
+    <NTService ID="{CD32E455-3926-429F-A4A3-CA62462BA6EE}" DisplayName="Operational Data Service" Description="Operational Data Service">
+      <UserName>BtsInProcess</UserName>
+      <Domain>*******</Domain>
+      <Password>*******</Password>
+      <IsGmsaAccount>False</IsGmsaAccount>
+    </NTService>
+    <NTCredential ID="{2507C665-DE5F-4A38-B8A8-CAB593C17D6A}" DisplayName="Management REST APIs User Role" Description="User Role for BizTalk Management REST APIs">
+      <NTAccount ScopeType="103" UpLevelFlags="676" DownLevelFlags="2147483654">Everyone</NTAccount>
+    </NTCredential>
+    <NTCredential ID="{B56998E5-4F88-4CD3-8370-BD4ACF37069C}" DisplayName="Operational Data REST APIs User Role" Description="Operational Data REST APIs User Role">
+      <NTAccount ScopeType="103" UpLevelFlags="676" DownLevelFlags="2147483654">Everyone</NTAccount>
+    </NTCredential>
+    <WebSite ID="{3A5204AB-1B33-49BB-970B-6BBFD149033C}" DisplayName="REST APIs website" Description="Website for BizTalk REST APIs">
+      <WebSiteName>Default Web Site</WebSiteName>
+    </WebSite>
+  </Feature>
+  <Feature Name="TMS" DisplayName="BizTalk TMS" Version="1.0" Description="BizTalk TMS" ConfigByDefault="true">
+    <NTService ID="{0BC99B44-CBB4-4108-AAA6-A0AE1CC1367D}" DisplayName="BizTalk TMS" Description="BizTalk TMS">
+      <UserName>BtsInProcess</UserName>
+      <Domain>*******</Domain>
+      <Password>*******</Password>
+      <IsGmsaAccount>False</IsGmsaAccount>
+    </NTService>
+  </Feature>
+  <InstalledFeature>MsEDIAS2</InstalledFeature>
+  <InstalledFeature>MsEDIAS2StatusReporting</InstalledFeature>
+  <InstalledFeature>WCFLOBAdapters</InstalledFeature>
+  <InstalledFeature>InfoWorkerApps</InstalledFeature>
+  <InstalledFeature>BAMPortal</InstalledFeature>
+  <InstalledFeature>PAM</InstalledFeature>
+  <InstalledFeature>MsEDISchemaExtension</InstalledFeature>
+  <InstalledFeature>MsEDISDK</InstalledFeature>
+  <InstalledFeature>MsEDIMigration</InstalledFeature>
+  <InstalledFeature>SDK</InstalledFeature>
+  <InstalledFeature>WMI</InstalledFeature>
+  <InstalledFeature>BizTalk</InstalledFeature>
+  <InstalledFeature>WCFSQLAdapter</InstalledFeature>
+  <InstalledFeature>Engine</InstalledFeature>
+  <InstalledFeature>MOT</InstalledFeature>
+  <InstalledFeature>MSMQ</InstalledFeature>
+  <InstalledFeature>Runtime</InstalledFeature>
+  <InstalledFeature>WCFSAPAdapter</InstalledFeature>
+  <InstalledFeature>WCFOracleDBAdapter</InstalledFeature>
+  <InstalledFeature>WCFOracleEBSAdapter</InstalledFeature>
+  <InstalledFeature>WCFSiebelAdapter</InstalledFeature>
+  <InstalledFeature>WCFAdapter</InstalledFeature>
+  <InstalledFeature>WcfAdapterAdminTools</InstalledFeature>
+  <InstalledFeature>AdminAndMonitoring</InstalledFeature>
+  <InstalledFeature>MonitoringAndTracking</InstalledFeature>
+  <InstalledFeature>AdminTools</InstalledFeature>
+  <InstalledFeature>BizTalkAdminSnapIn</InstalledFeature>
+  <InstalledFeature>HealthActivityClient</InstalledFeature>
+  <InstalledFeature>BAMTools</InstalledFeature>
+  <InstalledFeature>Migration</InstalledFeature>
+  <InstalledFeature>Development</InstalledFeature>
+  <InstalledFeature>BizTalkExplorer</InstalledFeature>
+  <InstalledFeature>BizTalkExtensions</InstalledFeature>
+  <InstalledFeature>OrchestrationDesigner</InstalledFeature>
+  <InstalledFeature>Designer</InstalledFeature>
+  <InstalledFeature>PipelineDesigner</InstalledFeature>
+  <InstalledFeature>XMLTools</InstalledFeature>
+  <InstalledFeature>AdapterImportWizard</InstalledFeature>
+  <InstalledFeature>VSTools</InstalledFeature>
+  <InstalledFeature>WCFDevTools</InstalledFeature>
+  <InstalledFeature>DeploymentWizard</InstalledFeature>
+  <InstalledFeature>TrackingProfileEditor</InstalledFeature>
+  <InstalledFeature>SSOAdmin</InstalledFeature>
+  <InstalledFeature>AdditionalApps</InstalledFeature>
+  <InstalledFeature>SSOServer</InstalledFeature>
+  <InstalledFeature>RulesEngine</InstalledFeature>
+  <InstalledFeature>OLAPNS</InstalledFeature>
+  <InstalledFeature>FBAMCLIENT</InstalledFeature>
+  <InstalledFeature>BAMEVENTAPI</InstalledFeature>
+  <InstalledFeature>ProjectBuildComponent</InstalledFeature>
+  <InstalledFeature>BizTalkTMS</InstalledFeature>
+</Configuration>
