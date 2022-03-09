@@ -33,7 +33,7 @@
     GUID = '75c75856-75ca-451b-8255-5f3e9eaae6e2'
 
     # Author of this module
-    Author = 'Ilian Nilsson, inherited work from Pieter van der Merwe, Chris Gardner'
+    Author = 'Ilian Nilsson, inherited work from Riccardo Viglianisi, Pieter van der Merwe and Chris Gardner'
 
     # Company or vendor of this module
     CompanyName = ''

@@ -1,0 +1,86 @@
+# Variable 'Major' was defined in the Variables tab
+# Variable 'Minor' was defined in the Variables tab
+trigger:
+  branches:
+    include:
+    - refs/heads/master
+name: $(BuildDefinitionName)_$(major).$(Minor)$(Rev:.r)
+jobs:
+- job: Phase_1
+  displayName: Phase 1
+  cancelTimeoutInMinutes: 1
+  pool:
+    name: BM-VS2017
+  steps:
+  - checkout: self
+    clean: true
+  - task: GitVersion@5
+    displayName: GitVersion
+  - task: VersionPowerShellModule@2
+    displayName: Version PowerShell Modules
+    inputs:
+      VersionNumber: $(GitVersion.MajorMinorPatch)
+      VersionRegex: '\d+\.\d+\.\d+'
+  - task: PowershellSyntaxValidator@1
+    name: PowershellSyntaxValidator1
+    displayName: 'Validate Powershell Syntax $(Build.SourcesDirectory) '
+    inputs:
+      RootDirectory: $(Build.SourcesDirectory)
+      Filter: '*.ps1,*.psm1'
+  - task: TestCodingGuidelines@1
+    name: TestCodingGuidelines2
+    displayName: 'Test PowerShell Coding Guidelines  '
+    continueOnError: True
+    inputs:
+      OutputFile: $(Build.SourcesDirectory)\Test.xml
+  - task: PublishTestResults@2
+    name: PublishTestResults5
+    displayName: Publish Test Results $(Build.SourcesDirectory)\Test.xml
+    inputs:
+      testRunner: NUnit
+      testResultsFiles: $(Build.SourcesDirectory)\Test.xml
+      testRunTitle: Powershell BizTalk Module
+  - task: SonarPropertiesFile@1
+    name: SonarPropertiesFile6
+    displayName: New SonarQube Properties File
+    inputs:
+      ProjectKey: BizTalk-PS
+      ProjectName: BizTalk PowerShell
+      ProjectVersion: $(Major).$(Minor)
+      AdditionalArguments: /d:sonar.psscriptanalyzer.results=E:/SonarQubeOutput/BiztalkPSAnalysis.xml,/d:sonar.language=powershell
+  - task: CodeCoverage-Format-Convertor@1
+    displayName: CodeCoverage Format Convertor
+    inputs:
+      ProjectDirectory: $(Build.SourcesDirectory)
+  - task: SonarQubeScannerCli@3
+    name: SonarQubeScannerCli7
+    displayName: Perform a SonarQube analysis
+    inputs:
+      connectedServiceName: 8f1c11ad-4a1f-42c6-aa98-c5b185c1e68a
+      projectKey: BizTalk-PS
+      projectName: BizTalk PowerShell
+      projectVersion: $(Major).$(Minor)
+      sources: $(Build.SourcesDirectory)
+      configFile: $(Build.SourcesDirectory)\sonar-project.properties
+  - task: SignPowerShellScripts@1
+    name: SignPowerShellScripts4
+    displayName: 'Sign Powershell Files in $(Build.SourcesDirectory) '
+    enabled: False
+    inputs:
+      RootDirectory: $(Build.SourcesDirectory)
+      CertificatePath: Cert:\LocalMachine\My\924FD0B47A1F4E433EDA2A25EC10DE96F36A72FA
+  - task: CopyFiles@2
+    name: CopyFiles1
+    displayName: 'Copy Files to: $(Build.ArtifactsStagingDirectory)\BizTalkAdministration_2013R2'
+    inputs:
+      SourceFolder: modules
+      Contents: '**\*'
+      TargetFolder: $(Build.ArtifactsStagingDirectory)\BizTalkAdministration_2013R2
+  - task: PublishBuildArtifacts@1
+    name: PublishBuildArtifacts2
+    displayName: 'Publish Artifact: module'
+    inputs:
+      PathtoPublish: $(Build.ArtifactsStagingDirectory)
+      ArtifactName: module
+      TargetPath: '\\my\share\$(Build.DefinitionName)\$(Build.BuildNumber)'
+...

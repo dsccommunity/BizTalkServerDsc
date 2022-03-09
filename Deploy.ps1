@@ -7,31 +7,25 @@ $destination = "$env:ProgramFiles\WindowsPowerShell\Modules\$moduleName\$modulev
 
 Remove-Item -Path $destination -Force -Recurse
 
-mkdir $destination -Force
+# Create folders
+New-Item -Name $destination -ItemType Directory -Force
+New-Item -Name $destination\Examples -ItemType Directory -Force
+New-Item -Name $destination\Tests -ItemType Directory -Force
 
-mkdir $destination\Examples -Force
+# Copy Resources and Manifest
+Get-ChildItem -Path $location -Filter BizTalkServerDsc.psd1 -Recurse | Copy-Item -Destination $destination
+Get-ChildItem -Path $location -Filter MSFT_BizTalkServerDsc.psm1 -Recurse | Copy-Item -Destination $destination
+Get-ChildItem -Path $location -Filter README.md -Recurse | Copy-Item -Destination $destination
 
-mkdir $destination\Tests -Force
-
-#Resources and Manifest
-
-get-childitem -path $location -filter BizTalkServerDsc.psd1 -recurse | copy-item -destination $destination
-
-get-childitem -path $location -filter MSFT_BizTalkServerDsc.psm1 -recurse | copy-item -destination $destination
-
-get-childitem -path $location -filter README.md -recurse | copy-item -destination $destination
-
-#Examples
-
+# Copy Examples
 Copy-Item -Path $location\Examples\* -Destination $destination\Examples -Recurse -Verbose
 
-#Tests
-
+# Copy Tests
 Copy-Item -Path $location\Tests\* -Destination $destination\Tests  -Recurse -Verbose
 
-# Script Analyzer
-
+# Run Script Analyzer
 Invoke-ScriptAnalyzer -Path $destination
 
-#Publish Module
+# Publish Module
+Invoke-Build -File ./build.ps1 -Configuration "Release"
 
