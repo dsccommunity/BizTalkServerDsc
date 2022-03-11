@@ -20,7 +20,7 @@ configuration BizTalk {
         [string]$ConfigurationLog
     )
 
-    Import-DscResource -ModuleName BizTalkServer -ModuleVersion 0.1.1.5
+    Import-DscResource -ModuleName BizTalkServerDsc -ModuleVersion 0.2.0
     Import-DscResource -ModuleName xWindowsUpdate -ModuleVersion 2.8.0.0
     Import-DscResource -ModuleName NetworkingDsc -ModuleVersion 8.2.0
     Import-DscResource -ModuleName ComputerManagementDsc -ModuleVersion 8.5.0

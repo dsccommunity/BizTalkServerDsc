@@ -22,7 +22,7 @@
     )
     BizTalk = @{
         Modules = @( 
-            @{ Name = 'BizTalkServer'; Version = '0.1.1.5' }
+            @{ Name = 'BizTalkServer'; Version = '0.2.0' }
         )
         ProductName = 'Microsoft BizTalk Server 2020'
         ProductId = '{205F5836-7512-4A06-9E74-ADC8AFA0EEC5}'
