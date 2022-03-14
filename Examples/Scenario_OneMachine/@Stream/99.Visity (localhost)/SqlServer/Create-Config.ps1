@@ -7,10 +7,10 @@ Remove-Item ($outputPath = ".\..\..\..\@Template\$(Get-StreamPath)") -Recurse -C
 $configParams = @{
     ConfigurationData = (Import-PowerShellDataFile '.\..\Node.psd1')
     OutputPath = $outputPath
-    SetupCredential = (New-Secret -Account '*******\pinn' -Password 'Vi9021Ty')
-    SqlAdminAccounts = @('*******\inn')
+    SetupCredential = (New-Secret -Account '*******\******' -Password '******')
+    SqlAdminAccounts = @('*******\******')
     SqlSvcCredentials = @{
-        MSSQLSERVER = (New-Secret -Account '*******\SqlServer' -Password 'Qs7054Ab!')
+        MSSQLSERVER = (New-Secret -Account '*******\SqlServer' -Password '******')
     }
     AgtSvcCredentials = @{}
     AssSvcCredentials = @{} 

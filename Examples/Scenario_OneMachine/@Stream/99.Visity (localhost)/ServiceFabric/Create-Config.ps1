@@ -7,7 +7,7 @@ Remove-Item ($outputPath = ".\..\..\..\@Template\$(Get-StreamPath)") -Recurse -C
 $configParams = @{
     ConfigurationData = (Import-PowerShellDataFile '.\..\Node.psd1')
     OutputPath = $outputPath
-    SetupCredential = (New-Secret -Account '*******\pinn' -Password 'Vi9021Ty')
+    SetupCredential = (New-Secret -Account '*******\******' -Password '******')
 }
 
 ServiceFabric @configParams
