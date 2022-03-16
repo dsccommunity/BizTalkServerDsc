@@ -1,31 +1,33 @@
-﻿$moduleName = 'BizTalkServerDsc'
+﻿$ErrorActionPreference = 'Stop'
+
+$moduleName = 'BizTalkServerDsc'
 $moduleVersion = '0.2.0'
-
 $location = Split-Path -parent $PSCommandPath
-
 $destination = "$env:ProgramFiles\WindowsPowerShell\Modules\$moduleName\$moduleversion"
+$target = 'MSFT_BizTalkServerDsc.psm1'
 
-Remove-Item -Path $destination -Force -Recurse
+# Remove current module
+Remove-Item -Path $destination -Force -Recurse -EA Silent
 
-# Create folders
-New-Item -Name $destination -ItemType Directory -Force
-New-Item -Name $destination\Examples -ItemType Directory -Force
-New-Item -Name $destination\Tests -ItemType Directory -Force
+# Create main folder
+New-Item -Path $destination -ItemType Container -Force 
 
-# Copy Resources and Manifest
-Get-ChildItem -Path $location -Filter BizTalkServerDsc.psd1 -Recurse | Copy-Item -Destination $destination
-Get-ChildItem -Path $location -Filter MSFT_BizTalkServerDsc.psm1 -Recurse | Copy-Item -Destination $destination
-Get-ChildItem -Path $location -Filter README.md -Recurse | Copy-Item -Destination $destination
+# Copy Manifest 
+Copy-Item -Path "$location\LICENSE" -Destination "$destination"
+Copy-Item -Path "$location\README.md" -Destination "$destination" 
+Copy-Item -Path "$location\$moduleName\$moduleName.psd1" -Destination "$destination\$moduleName.psd1"
 
-# Copy Examples
-Copy-Item -Path $location\Examples\* -Destination $destination\Examples -Recurse -Verbose
+# Merge Resources 
+@'
+Import-Module PSDesiredStateConfiguration
 
-# Copy Tests
-Copy-Item -Path $location\Tests\* -Destination $destination\Tests  -Recurse -Verbose
+'@ | Set-Content -Path "$destination\$target"
+Get-ChildItem -Path "$location\$moduleName\DscClassResources" -Filter *.psm1 -Recurse | 
+    Get-Content -Raw | Add-Content -Path "$destination\$target"
+
+# Copy Tests & Examples
+Copy-Item -Path "$location\Tests" -Destination "$destination\Test" -Recurse
+Copy-Item -Path "$location\Examples" -Destination "$destination\Examples" -Recurse
 
 # Run Script Analyzer
-Invoke-ScriptAnalyzer -Path $destination
-
-# Publish Module
-Invoke-Build -File ./build.ps1 -Configuration "Release"
-
+Invoke-ScriptAnalyzer -Path $destination | Where-Object { $_.Severity -ne 'Information' } | Format-Table -AutoSize
