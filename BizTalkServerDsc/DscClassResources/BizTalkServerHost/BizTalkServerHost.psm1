@@ -1,4 +1,4 @@
-enum Ensure {
+﻿enum Ensure {
     Absent
     Present
 }
@@ -44,14 +44,11 @@ class BizTalkServerHost {
 
         if ($this.Ensure -eq [Ensure]::Present) {
             $query = "SELECT * FROM MSBTS_HostSetting WHERE Name='$($this.Name)'"
-
             $query = $query.Replace("\", "\\")
-
             $instance = Get-CimInstance -Query $query -Namespace $this.namespace -CimSession $session
 
             if ($null -eq $instance) {
                 $instanceClass = Get-CimClass -ClassName MSBTS_HostSetting -Namespace $this.namespace -CimSession $session
-
                 $properties = @{
                     Name = $this.Name;
                     AuthTrusted = $this.Trusted;
@@ -63,10 +60,8 @@ class BizTalkServerHost {
                     MgmtDbServerOverride = '';
                     MgmtDbNameOverride = ''
                 }
-
                 $instance = New-CimInstance -CimClass $instanceClass  -Property $properties -CimSession $session
-            }
-            else {
+            } else {
                 $instance.AuthTrusted = $this.Trusted;
                 $instance.HostTracking = $this.Tracking;
                 $instance.HostType = & {if ($this.Type -eq [HostType]::Inprocess) {1} else {2}};
@@ -76,12 +71,9 @@ class BizTalkServerHost {
             }
 
             Set-CimInstance -InputObject $instance -CimSession $session
-        }
-        else {
+        } else {
             $query = "SELECT * FROM MSBTS_HostSetting WHERE Name='$($this.Name)'"
-
             $query = $query.Replace("\", "\\")
-
             $instance = Get-CimInstance -Query $query -Namespace $this.namespace -CimSession $session
 
             if ($null -ne $instance) {
@@ -90,21 +82,16 @@ class BizTalkServerHost {
         }
     }
 
-    [bool] Test() {
+    [bool]Test() {
         $session = New-CimSession -Credential $this.Credential
-
         $hostType = & {if ($this.Type -eq [HostType]::Inprocess) {1} else {2}}
-
         $query = "SELECT * FROM MSBTS_HostSetting WHERE Name='$($this.Name)' AND AuthTrusted = $($this.Trusted) AND HostTracking = $($this.Tracking) AND HostType = $hostType AND IsHost32BitOnly = $($this.Is32Bit) AND IsDefault = $($this.Default) AND NTGroupName = '$($this.WindowsGroup)'"
-
         $query = $query.Replace("\", "\\")
-
         $instance = Get-CimInstance -Query $query -Namespace $this.namespace -CimSession $session
 
         if ($this.Ensure -eq [Ensure]::Present) {
             $result = ($null -ne $instance)
-        }
-        else {
+        } else {
             $result = ($null -eq $instance)
         }
 
@@ -125,13 +112,12 @@ class BizTalkServerHost {
         return $result
     }
 
-    [BizTalkServerHost] Get() {
+    [BizTalkServerHost]Get() {
         $result = $this.Test()
 
         if ($result) {
             return $this
-        }
-        else {
+        } else {
             return $null
         }
     }

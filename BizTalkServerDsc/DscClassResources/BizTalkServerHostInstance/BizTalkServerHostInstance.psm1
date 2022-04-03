@@ -1,4 +1,4 @@
-enum Ensure {
+﻿enum Ensure {
     Absent
     Present
 }
@@ -9,19 +9,18 @@ class BizTalkServerHostInstance {
     [string]$Host
 
     [DscProperty(Mandatory)]
-    [PSCredential] $Credential
+    [PSCredential]$Credential
 
     [DscProperty(Mandatory)]
-    [Ensure] $Ensure
+    [Ensure]$Ensure
 
-    [string] $namespace = 'ROOT\MicrosoftBizTalkServer'
+    [string]$namespace = 'ROOT\MicrosoftBizTalkServer'
 
-    [void] Set() {
+    [void]Set() {
         $session = New-CimSession -Credential $this.Credential
 
-        if($this.Ensure -eq [Ensure]::Present){
+        if ($this.Ensure -eq [Ensure]::Present) {
             $instanceClass = Get-CimClass -Namespace $this.namespace –ClassName MSBTS_ServerHost -CimSession $session
-
             $properties = @{
                 ServerName = $($env:COMPUTERNAME);
                 HostName = $($this.Host);
@@ -40,9 +39,7 @@ class BizTalkServerHostInstance {
             Invoke-CimMethod -InputObject $instance -MethodName Map -Arguments $arguments -CimSession $session
 
             $instanceClass = Get-CimClass -Namespace $this.namespace –ClassName MSBTS_HostInstance -CimSession $session
-
             $name = "Microsoft BizTalk Server $($this.Host) $($env:COMPUTERNAME)"
-
             $properties = @{
                 Name = $name;
                 HostName = $($this.Host);
@@ -58,7 +55,6 @@ class BizTalkServerHostInstance {
 
             $user = $this.Credential.UserName
             $password = $this.Credential.GetNetworkCredential().Password
-
             $arguments = @{
                 GrantLogOnAsService = $true;
                 Logon = $user;
@@ -66,21 +62,19 @@ class BizTalkServerHostInstance {
             }
 
             Invoke-CimMethod -InputObject $instance -MethodName Install -Arguments $arguments -CimSession $session
-        }
-        else{
+        } else {
             $query = "SELECT * FROM MSBTS_HostInstance WHERE HostName='$($this.Host)'"
-
             $query = $query.Replace("\", "\\")
-
             $instance = Get-CimInstance -Query $query -Namespace $this.namespace -CimSession $session
 
             Write-Verbose "Find MSBTS_HostInstance $($this.Host)"
 
             $arguments = @{}
 
-            if($null -ne $instance){
-                if($instance.ServiceState =eq 4){
+            if ($null -ne $instance) {
+                if ($instance.ServiceState -eq 4) {
                     Write-Verbose "Stop MSBTS_HostInstance $($this.Host)"
+
                     Invoke-CimMethod -InputObject $instance -MethodName Stop -Arguments $arguments -CimSession $session
                 }
 
@@ -92,38 +86,31 @@ class BizTalkServerHostInstance {
             Write-Verbose "UnMap MSBTS_ServerHost $($this.Host)"
 
             $instanceClass = Get-CimClass -Namespace $this.namespace –ClassName MSBTS_ServerHost -CimSession $session
-
             $properties = @{
                 ServerName = $($env:COMPUTERNAME);
                 HostName = $($this.Host);
                 MgmtDbNameOverride='';
                 MgmtDbServerOverride='';
             }
-
             $instance = New-CimInstance -CimClass $instanceClass -Property $properties -ClientOnly -CimSession $session
 
             Invoke-CimMethod -InputObject $instance -MethodName ForceUnmap -Arguments $arguments
         }
     }
 
-    [bool] Test() {
+    [bool]Test() {
         $session = New-CimSession -Credential $this.Credential
-
         $query = "SELECT * FROM MSBTS_HostInstance WHERE HostName='$($this.Host)' AND RunningServer='$($env:COMPUTERNAME)'"
-
         $query = $query.Replace("\", "\\")
-
         $instance = Get-CimInstance -Query $query -Namespace $this.namespace -CimSession $session
 
-        if($this.Ensure -eq [Ensure]::Present){
+        if ($this.Ensure -eq [Ensure]::Present) {
             $result = ($null -ne $instance)
-        }
-        else{
+        } else {
             $result = ($null -eq $instance)
         }
 
-        if($null -ne $instance)
-        {
+        if ($null -ne $instance) {
             $this.Host = $instance.HostName
         }
 
@@ -132,13 +119,12 @@ class BizTalkServerHostInstance {
         return $result
     }
 
-    [BizTalkServerHostInstance] Get() {
+    [BizTalkServerHostInstance]Get() {
         $result = $this.Test()
 
-        if($result){
+        if ($result) {
             return $this
-        }
-        else{
+        } else {
             return $null
         }
     }

@@ -1,6 +1,4 @@
 ﻿@{
-    RootModule = "BizTalkServerDsc.psm1"
-
     DscResourcesToExport = @(
         'BizTalkServerHost'
         'BizTalkServerHostInstance'
@@ -16,6 +14,7 @@
         'DscClassResources\BizTalkServerReceiveHandler\BizTalkServerReceiveHandler.psd1'
         'DscClassResources\BizTalkServerSendHandler\BizTalkServerSendHandler.psd1'
     )
+    
     CmdLetsToExport = @()
 
     FunctionsToExport = @()
@@ -55,10 +54,10 @@
             Tags = @('DSC', 'BizTalk')
 
             # A URL to the license for this module.
-            LicenseUri = 'https://github.com/IlleNilsson/BizTalkServerDsc/blob/master/LICENSE'
+            LicenseUri = 'https://github.com/BizTalkCommunity/BizTalkServerDsc/blob/master/LICENSE'
 
             # A URL to the main website for this project.
-            ProjectUri = 'https://github.com/IlleNilsson/BizTalkServerDsc'
+            ProjectUri = 'https://github.com/BizTalkCommunity/BizTalkServerDsc'
 
             # A URL to an icon representing this module.
             # IconUri = ''
