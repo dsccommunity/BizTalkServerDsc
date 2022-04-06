@@ -1,0 +1,51 @@
+"Caption","Description","SettingID","Comment","Constraints","DefaultInboundCfg","DefaultOutboundCfg","MgmtCLSID","MgmtDbNameOverride","MgmtDbServerOverride","Name","PSComputerName"
+,,,"Adapter for communicating with Azure Blob Storage.","11","<CustomProps/>","<CustomProps/>","{23D89CB3-D638-4558-AA36-79F1ECB0454F}","","","AzureBlobStorage",
+,,,"","15371","","","{177DD96E-44C8-4B22-AB32-9F1B323C846A}","","","CO.File",
+,,,"","15371","","","{A1FCF10F-4339-491C-8FF6-0A23682D6390}","","","CO.RaindanceTelegram",
+,,,"Adapter for communicating with Event Hubs.","11","<CustomProps/>","<CustomProps/>","{B3E61555-84AE-4AF0-9528-BC104F92E01C}","","","EventHub",
+,,,"FILE adapter","11","<CustomProps/>","<CustomProps/>","{5E49E3A6-B4FC-4077-B44C-22F34A242FDB}","","","FILE",
+,,,"FTP adapter","80907","<CustomProps/>","<CustomProps/>","{3979FFED-0067-4CC6-9F5A-859A5DB6E9BB}","","","FTP",
+,,,"HTTP adapter","387","<CustomProps/>","<CustomProps><RequestTimeout vt=""3"">0</RequestTimeout><MaxRedirects vt=""3"">5</MaxRedirects><ContentType vt=""8"">text/xml</ContentType><UseProxy vt=""11"">0</UseProxy><ProxyPort vt=""19"">80</ProxyPort></CustomProps>","{1C56D157-0553-4345-8A1F-55D2D1A3FFB6}","","","HTTP",
+,,,"Adapter for communicating with Logic Apps.","15747","<CustomProps/>","<CustomProps/>","{EC50860C-24CB-4934-BE2E-1694093B721F}","","","LogicApp",
+,,,"Loopback adapter","9474","","","{26C0617B-3CE8-4100-90DF-91EDE4826E2B}","","","Loopback",
+,,,"MQSeries adapter","15627","<CustomProps/>","<CustomProps/>","{B0942470-A5A1-45AF-8D01-27481B306441}","","","MQSeries",
+,,,"MSMQ adapter","13579","<CustomProps/>","<CustomProps/>","{FF5CEE87-FD92-4422-B47D-F7D033311693}","","","MSMQ",
+,,,"","523","<CustomProps><Port vt=""3"">22</Port><AccessAnySSHServerHostKey vt=""11"">0</AccessAnySSHServerHostKey><ClientAuthenticationMode vt=""8"">Password</ClientAuthenticationMode><PollingInterval vt=""3"">5</PollingInterval><RetainAfterDownload vt=""11"">0</RetainAfterDownload><EnableTimeComparison vt=""11"">0</EnableTimeComparison><RedownloadInterval vt=""3"">0</RedownloadInterval><PollingIntervalUnit vt=""8"">Seconds</PollingIntervalUnit><ConnectionLimit vt=""3"">5</ConnectionLimit><MaxConnectionReuseTimeInSeconds vt=""3"">0</MaxConnectionReuseTimeInSeconds><ProxyType vt=""8"">None</ProxyType><ProxyPort vt=""3"">1080</ProxyPort><EncryptionCipher vt=""8"">Auto</EncryptionCipher></CustomProps>
+","<CustomProps><Port vt=""3"">22</Port><AppendIfExists vt=""11"">0</AppendIfExists><AccessAnySSHServerHostKey vt=""11"">0</AccessAnySSHServerHostKey><ClientAuthenticationMode vt=""8"">Password</ClientAuthenticationMode><ConnectionLimit vt=""3"">5</ConnectionLimit><MaxConnectionReuseTimeInSeconds vt=""3"">0</MaxConnectionReuseTimeInSeconds><ProxyType vt=""8"">None</ProxyType><ProxyPort vt=""3"">1080</ProxyPort><EncryptionCipher vt=""8"">Auto</EncryptionCipher></CustomProps>
+","{F75AEFF5-EBC7-4E7C-A753-FDD68AB45C95}","","","MS-SFTP",
+,,,"Adapter for communicating with Office365 Outlook Calendars.","11","<CustomProps/>","<CustomProps/>","{34676320-8854-4208-9DBB-A7222A0241E2}","","","Office365 Outlook Calendar",
+,,,"Adapter for communicating with Office365 Outlook Contacts.","2","","<CustomProps/>","{CBF8600C-4489-4325-BBFF-2E9D2B00FC99}","","","Office365 Outlook Contact",
+,,,"Adapter for communicating with Office365 Outlook Emails.","11","<CustomProps/>","<CustomProps/>","{48B96E09-BD96-4F46-95EF-57ACCC55F23D}","","","Office365 Outlook Email",
+,,,"POP3 adapter","71689","","","{1787FCC1-9AAA-4BBD-9096-7EB77E3D9D9B}","","","POP3",
+,,,"Adapter for communicating with service bus queues and topics.","523","","","{9C458D4A-A73C-4CB3-89C4-86AE0103DE2F}","","","SB-Messaging",
+,,,"BizTalk Scheduled Task Adapter. The schedule capabilities are similar to those available with the Windows Scheduled Task Service. 7.0.2","9","","","{F2FAA6A3-45E2-4C09-8024-425E768CC8EF}","","","Schedule",
+,,,"","15371","","","{B4F8C77D-08C9-4B82-9922-ABB646654DEB}","","","SFTP",
+,,,"SMTP adapter","2","","<CustomProps><SMTPAuthenticate vt=""19"">2</SMTPAuthenticate></CustomProps>","{8F36B311-B670-4CF6-AAEC-04EBB80ED48D}","","","SMTP",
+,,,"SOAP adapter","899","<CustomProps/>","<CustomProps><ProxyPort vt=""3"">80</ProxyPort><UseProxy vt=""11"">0</UseProxy></CustomProps>","{7E104B2F-003C-4D9F-A6A5-168F727289F0}","","","SOAP",
+,,,"Windows Communication Foundation (WCF) IIS-hosted adapter for BasicHttpBinding.","899","","<CustomProps><UseProxy vt=""11"">0</UseProxy></CustomProps>
+","{467C1A52-373F-4F09-9008-27AF6B985F14}","","","WCF-BasicHttp",
+,,,"Windows Communication Foundation (WCF) adapter for BasicHttpRelayBinding.","907","<CustomProps/>
+","<CustomProps><UseProxy vt=""11"">0</UseProxy></CustomProps>
+","{F15097A3-283A-40B2-ACA7-6B7BAE0A0955}","","","WCF-BasicHttpRelay",
+,,,"Windows Communication Foundation (WCF) in-process adapter for CustomBinding.","907","<CustomProps/>
+","<CustomProps/>
+","{AF081F69-38CA-4D5B-87DF-F0344B12557A}","","","WCF-Custom",
+,,,"Windows Communication Foundation (WCF) IIS-hosted adapter for CustomBinding.","641","<CustomProps/>
+","","{16824334-968F-42DB-B33B-6F8D62ED1EBC}","","","WCF-CustomIsolated",
+,,,"Windows Communication Foundation (WCF) in-process adapter for NetMsmqBinding.","523","","","{36F48BEB-64AA-4C80-B396-1F2BA53BED84}","","","WCF-NetMsmq",
+,,,"Windows Communication Foundation (WCF) in-process adapter for NetNamedPipeBinding.","907","<CustomProps><MaxConnections vt=""3"">10</MaxConnections></CustomProps>
+","<CustomProps><MaxConnections vt=""3"">10</MaxConnections></CustomProps>
+","{148D2E28-D634-4127-AA9E-7D6298156BF1}","","","WCF-NetNamedPipe",
+,,,"Windows Communication Foundation (WCF) in-process adapter for NetTcpBinding.","907","<CustomProps><MaxConnections vt=""3"">10</MaxConnections></CustomProps>
+","<CustomProps><MaxConnections vt=""3"">10</MaxConnections></CustomProps>
+","{7FD2DFCD-6A7B-44F9-8387-29457FD2EAAF}","","","WCF-NetTcp",
+,,,"Windows Communication Foundation (WCF) adapter for NetTcpRelayBinding.","907","<CustomProps><MaxConnections vt=""3"">10</MaxConnections></CustomProps>
+","<CustomProps><MaxConnections vt=""3"">10</MaxConnections></CustomProps>
+","{B0A7E20B-9519-4B8E-9137-3A0DEC2792B0}","","","WCF-NetTcpRelay",
+,,,"Windows Communication Foundation (WCF) in-process adapter for SqlBinding.","779","","","{59B35D03-6A06-4734-A249-EF561254ECF7}","","","WCF-SQL",
+,,,"Windows Communication Foundation (WCF) adapter for WebHttpBinding.","387","<CustomProps/>
+","<CustomProps><UseProxy vt=""11"">0</UseProxy></CustomProps>
+","{E5B2DE81-DE67-4559-869B-20925949A1E0}","","","WCF-WebHttp",
+,,,"Windows Communication Foundation (WCF) IIS-hosted adapter for WSHttpBinding.","899","","<CustomProps><UseProxy vt=""11"">0</UseProxy></CustomProps>
+","{2B219014-BA04-4B70-A66B-A8C418B109FD}","","","WCF-WSHttp",
+,,,"Windows SharePoint Services adapter","15371","<CustomProps/>","<CustomProps/>","{BA7DAD66-5FC8-4A24-A27E-D9F68FD67C3A}","","","Windows SharePoint Services",

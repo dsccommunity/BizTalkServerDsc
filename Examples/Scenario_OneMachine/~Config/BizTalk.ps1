@@ -17,7 +17,9 @@ configuration BizTalk {
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()]
         [string]$ConfigurationFile,
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()]
-        [string]$ConfigurationLog
+        [string]$ConfigurationLog,
+        [Parameter(Mandatory)][ValidateNotNullOrEmpty()]
+        [hashtable]$Secrets
     )
 
     Import-DscResource -ModuleName BizTalkServerDsc -ModuleVersion 0.2.0
@@ -32,34 +34,60 @@ configuration BizTalk {
     Node $AllNodes.NodeName {
         if (!($Node.NodeRole -contains 'BizTalk')) { return }
         # INFO: Configure BizTalk Hosts Send & Receive Handlers
-<#         $ConfigurationData.BizTalk.Adapters | ForEach-Object {
+        $ConfigurationData.BizTalk.Adapters | ForEach-Object {
             param([string]$adapterName = $_.Name)
             $_.SendHandlers | ForEach-Object {
-                BizTalkServerSendHandler "$($adapterName)_$($_.Host)" {
+                BizTalkServerSendHandler "$($_.Host)_$($adapterName)" {
                     PsDscRunAsCredential = $SetupCredential
                     Adapter = $adapterName
                     Host = $_.Host
                     Default = $_.Default
                     Ensure = 'Present'
-                    # DependsOn = "# TODO: Ilian, help!"
+                    DependsOn = @("[BizTalkServerAdapter]$adapterName")
                 } 
             }
             $_.ReceiveHandlers | ForEach-Object {
-                BizTalkServerReceiveHandler "$($adapterName)_$($_.Host)" {
+                BizTalkServerReceiveHandler "$($_.Host)_$($adapterName)" {
                     PsDscRunAsCredential = $SetupCredential
                     Adapter = $adapterName
                     Host = $_.Host
                     Ensure = 'Present'
-                    # DependsOn = "# TODO: Ilian, help!"
+                    DependsOn = @("[BizTalkServerAdapter]$adapterName")
                 }
             }
-        }   #>
+        }  
+        # INFO: Register BizTalk Adapters & install if needed
+        $ConfigurationData.BizTalk.Adapters | Where-Object { $_.MgmtCLSID } | ForEach-Object {
+            $bizTalkServerAdapterDependsOn = @(if ($_.SourcePath) { 
+                    @('[Script]BtsConfig', "[Package]BtsAdapterSetup_$($_.Name)") 
+                } else { 
+                    @('[Script]BtsConfig') 
+                } )
+            $bizTalkServerAdapterDependsOn += @($ConfigurationData.BizTalk.Hosts | % { "[BizTalkServerHostInstance]$($_.Name)" })
+            BizTalkServerAdapter $_.Name {
+                PsDscRunAsCredential = $SetupCredential
+                Name = $_.Name
+                MgmtCLSID = $_.MgmtCLSID
+                Ensure = 'Present'
+                DependsOn = $bizTalkServerAdapterDependsOn
+            }
+            if ($_.SourcePath) {
+                Package "BtsAdapterSetup_$($_.Name)" {
+                    PsDscRunAsCredential = $SetupCredential
+                    Name = "$($_.ProductName)"
+                    ProductId = "$($_.ProductId)"
+                    Path = "$($_.SourcePath)"
+                    Ensure = 'Present' 
+                    DependsOn = @('[Script]BtsConfig') + @($ConfigurationData.BizTalk.Hosts | % { "[BizTalkServerHostInstance]$($_.Name)" })
+                }
+            }
+        }
         # INFO: Configure BizTalk Hosts & Host Instances
         $ConfigurationData.BizTalk.Hosts | ForEach-Object {
             BizTalkServerHostInstance $_.Name {
                 PsDscRunAsCredential = $SetupCredential
                 Host = $_.Name
-                Credential = New-Secret -Account $_.Account
+                Credential = (Use-Secret -Account $_.Account -Secrets $Secrets)
                 Ensure = 'Present' 
                 DependsOn = @("[BizTalkServerHost]$($_.Name)") 
             } 
@@ -76,32 +104,15 @@ configuration BizTalk {
                 DependsOn = @('[Script]BtsConfig') 
             }
         }
-        # INFO: Register BizTalk Adapters & install if needed
-        $ConfigurationData.BizTalk.Adapters | Where-Object { $_.MgmtCLSID } | ForEach-Object {
-            BizTalkServerAdapter $_.Name {
-                PsDscRunAsCredential = $SetupCredential
-                Name = $_.Name
-                MgmtCLSID = $_.MgmtCLSID
-                Ensure = 'Present'
-                DependsOn = @('[Script]BtsConfig') + 
-                    (if ($_.SourcePath) { @("[Package]BtsAdapterSetup_$($_.Name)") } else { @() })
-            }
-            if ($_.SourcePath) {
-                Package "BtsAdapterSetup_$($_.Name)" {
-                    PsDscRunAsCredential = $SetupCredential
-                    Name = "$($_.ProductName)"
-                    ProductId = "$($_.ProductId)"
-                    Path = "$($_.SourcePath)"
-                    Ensure = 'Present' 
-                    DependsOn = @('[Script]BtsConfig')
-                }
-            }
-        }
         # INFO: Configure BizTalk
+        $tmsAccountXmlPath = '/Configuration/Feature[@Name=''TMS'']/NTService'
+        $tmsAccountNode = $Configuration.SelectSingleNode($tmsAccountXmlPath)
+        $tmsAccount = if ($tmsAccountNode) { "$($tmsAccountNode.Domain)\$($tmsAccountNode.UserName)" }
         $btsConfigParams = @{ 
             SetupCredential = $SetupCredential
             ConfigurationFile = $ConfigurationFile # INFO: String expansion will accour on remote node
             ConfigurationLog = $ConfigurationLog # INFO: String expansion will accour on remote node
+            TmsAccount = $tmsAccount
             DependsOnResource = @('[Script]BtsConfigLog')
         }
         BtsConfig @btsConfigParams
@@ -115,12 +126,12 @@ configuration BizTalk {
         }
         FileAbsent @btsConfigLogParams
         # INFO: Backup BizTalk SSO Secret Backup file
-        $xmlPathSecretBackupFile = '/Configuration/Feature/Question/Answer/FILE[@ID=''SSO_ID_BACKUP_SECRET_FILE'']/Value/text()'
-        $secretBackupFile = $Configuration.SelectSingleNode($xmlPathSecretBackupFile).Value
+        $secretBackupFileXmlPath = '/Configuration/Feature/Question/Answer/FILE[@ID=''SSO_ID_BACKUP_SECRET_FILE'']/Value/text()'
+        $secretBackupFileName = $Configuration.SelectSingleNode($secretBackupFileXmlPath).Value
         $secretBackupParams = @{ 
             SetupCredential = $SetupCredential
             ResourceName = 'SecretBackup'
-            FilePath = $secretBackupFile
+            FilePath = $secretBackupFileName
             Backup = $true
             DependsOnResource = if ($ConfigurationData.BizTalk.Patch) { @('[Script]BtsPatch') } else { @('[Script]BtsSetup') }
         }

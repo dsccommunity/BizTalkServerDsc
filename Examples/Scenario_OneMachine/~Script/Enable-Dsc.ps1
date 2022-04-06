@@ -2,13 +2,11 @@
 #Requires -Version 5.1
 #Requires -RunAsAdministrator
 
-#Requires -Modules @{ ModuleName = 'Microsoft.PowerShell.SecretManagement'; ModuleVersion = '1.1.2' } 
-#Requires -Modules @{ ModuleName = 'Microsoft.PowerShell.SecretStore'; ModuleVersion = '1.0.6' } 
-
 function Enable-Dsc {
     [CmdletBinding()] 
     param (
         [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
         [hashtable]$Node,
         [string[]]$NodeRole
     )
@@ -22,12 +20,12 @@ function Enable-Dsc {
 
     $Node.AllNodes | # INFO: Filter which nodes should be used by role
         Where-Object { ($_.NodeName -ne '*') -and 
-            (($null -eq $NodeRole) -or (Compare-Object $NodeRole $_.NodeRole -ExcludeDiff)) } | 
+            (($null -eq $NodeRole) -or (Compare-Object $NodeRole $_.NodeRole -Include -Exclude)) } | 
                 ForEach-Object {
         $combinedModules = $commonModules
 
         $_.NodeRole | # INFO: Filter which roles should be used for current node
-            Where-Object { ($null -eq $NodeRole) -or (Compare-Object $_ $NodeRole -ExcludeDiff) } | 
+            Where-Object { ($null -eq $NodeRole) -or (Compare-Object $_ $NodeRole -Include -Exclude) } | 
                 ForEach-Object {
             # INFO: Retreive DSC resources for current node and current role 
             $roleModules = Invoke-Expression "`$Node.$_.Modules"
@@ -35,7 +33,7 @@ function Enable-Dsc {
             $combinedModules += $roleModules 
         }
 
-        Write-Progress -Activity 'Preparing nodes for DSC' -Status "Node: $($_.NodeName)"
+        Write-Progress -Activity 'Preparing nodes for DSC' -Status "Node: $($_.NodeName) with $(($combinedModules | % { $_.Name }) -join ', ')"
 
         try { # INFO: Install PowerShell modules on nodes # NOTE: This is executed on remote node, it's hard to debug so be carefull
             Invoke-Command -Computer $_.NodeName -Script {
@@ -62,7 +60,6 @@ function Enable-Dsc {
                     param(
                         [string]$RequiredVersion = $_.Version
                     )
-
                     !(Get-Module -Name $_.Name -ListAvailable | Where-Object { $_.Version -eq $RequiredVersion } ) 
                 } | ForEach-Object {
                     Find-Module -Name $_.Name -RequiredVersion $_.Version | 
@@ -102,37 +99,4 @@ function Get-StreamPath {
     param()
  
     "$((Get-Item .).Parent.Name)\$((Get-Item .).Name)"
-}
-
-function New-Secret {
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingPlainTextForPassword', '', Scope='Function')]
-    [CmdletBinding()]
-    param(
-        [Parameter(ParameterSetName = 'AccountPassword', Mandatory=$true)]
-        [Parameter(ParameterSetName = 'AccountLookupPassword', Mandatory=$true)]
-        [ValidateNotNullOrEmpty()]
-        [string]$Account,
-        [Parameter(ParameterSetName = 'AccountPassword', Mandatory=$true)]
-        [ValidateNotNullOrEmpty()]
-        [string]$Password
-    )
-    
-    if ($PSCmdlet.ParameterSetName -eq 'AccountPassword') {
-        (New-Object System.Management.Automation.PsCredential(
-            $Account, (ConvertTo-SecureString $Password -AsPlainText -Force)))
-    } elseif ($PSCmdlet.ParameterSetName -eq 'AccountLookupPassword') {
-        # TODO: Bitwarden via Microsoft.PowerShell.SecretManagement
-        $Password = switch ($Account) {
-            '*******\BtsIsolated' { '*******' }
-            '*******\BtsInProcess' { '*******' }
-            default {
-                throw "Invalid account: $Account"
-            }
-        }
-
-        (New-Object System.Management.Automation.PsCredential(
-            $Account, (ConvertTo-SecureString $Password -AsPlainText -Force)))
-    } else {
-        throw "Invalid New-Secret call: '$($PSCmdlet.ParameterSetName)'"
-    } 
 }

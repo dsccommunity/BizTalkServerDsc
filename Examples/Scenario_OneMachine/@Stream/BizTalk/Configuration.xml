@@ -1,3 +1,4 @@
+<!-- # TODO: Refactor according to stream 99.Visity -->
 <Configuration>
   <Feature Name="SSOServer,Engine" DisplayName="Enterprise Single Sign-On" Version="1.0" Description="Enterprise Single Sign-On configuration" ConfigByDefault="true">
     <Question ID="IsSecretServer" Text="&amp;Create a new SSO system;&amp;Join an existing SSO system" Answers="Create,Join" Default="Create">

@@ -1,0 +1,14 @@
+.vs
+obj
+bin
+*.*proj.user
+*.xsd.cs
+*.btp.cs
+*.btm.cs
+*.odx.cs
+*.mof
+*.meta.mof
+*.error.mof
+/@Configuration/**/BtsConfig.xml
+**/packages/*
+!**/packages/repositories.config

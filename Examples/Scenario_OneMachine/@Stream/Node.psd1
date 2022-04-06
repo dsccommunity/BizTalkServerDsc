@@ -1,14 +1,7 @@
 @{
     AllNodes = @(
         @{
-            NodeName = 'localhost'
-            NodeType = 'Client' # VALUES: Client | Server
-            NodeRole = @('BizTalk', 'ServiceFabric', 'SqlServer') # VALUES: BizTalk & ServiceFabric & SqlServer
-            BizTalkReplica = 'Primary' # VALUES: Primary | Secondary
-            ServiceFabricReplica = 'Primary' # VALUES: Primary | Secondary
-            SqlServerReplica = 'Primary' # VALUES: Primary | Secondary
-            PSDscAllowDomainUser = $true
-            PSDscAllowPlainTextPassword = $true
+            NodeName = '*'
         }
     )
     Modules = @(
@@ -119,6 +112,17 @@
                     @{ Host = 'GcSxHost64'; Default = $false }
                     @{ Host = 'GcSxPrioHost64'; Default = $false }
                 )
+            }
+            @{ Name = 'Schedule'
+                ProductName = 'Schedule'
+                ProductId = $null
+                SourcePath = '\\<YOUR SHARE>\Adapter Installers\ScheduledTaskAdapter\v7.0.2 BizTalk 2020'
+                MgmtCLSID = '{F2FAA6A3-45E2-4C09-8024-425E768CC8EF}'
+                ReceiveHandlers = @(
+                    @{ Host = 'GcCxHost' }
+                    @{ Host = 'GcCxHost64' }
+                )
+                SendHandlers = @()
             }
             @{ Name = 'SMTP'
                 MgmtCLSID = '{8F36B311-B670-4CF6-AAEC-04EBB80ED48D}'
@@ -272,49 +276,14 @@
             }
         )
         Hosts = @(
-            @{ Name = 'GcIxHost'; Type = 'Isolated'; WindowsGroup = 'BizTalk Isolated Host Users'; Account = '<DOMAIN>\<ISOLATED ACCOUNT>'; Is32Bit = $false; Trusted = $true; Tracking = $false; Default = $false }
-            @{ Name = 'GcCxHost'; Type = 'InProcess'; WindowsGroup = 'BizTalk Application Users'; Account = '<DOMAIN>\<IN PROCESS ACCOUNT>'; Is32Bit = $true; Trusted = $true; Tracking = $false; Default = $false }
-            @{ Name = 'GcCxHost64'; Type = 'InProcess'; WindowsGroup = 'BizTalk Application Users'; Account = '<DOMAIN>\<IN PROCESS ACCOUNT>'; Is32Bit = $false; Trusted = $true; Tracking = $false; Default = $false }
-            @{ Name = 'GcRxHost'; Type = 'InProcess'; WindowsGroup = 'BizTalk Application Users'; Account = '<DOMAIN>\<IN PROCESS ACCOUNT>'; Is32Bit = $true; Trusted = $true; Tracking = $false; Default = $false }
-            @{ Name = 'GcRxHost64'; Type = 'InProcess'; WindowsGroup = 'BizTalk Application Users'; Account = '<DOMAIN>\<IN PROCESS ACCOUNT>'; Is32Bit = $false; Trusted = $true; Tracking = $false; Default = $false }
-            @{ Name = 'GcSxHost'; Type = 'InProcess'; WindowsGroup = 'BizTalk Application Users'; Account = '<DOMAIN>\<IN PROCESS ACCOUNT>'; Is32Bit = $true; Trusted = $true; Tracking = $false; Default = $false }
-            @{ Name = 'GcSxHost64'; Type = 'InProcess'; WindowsGroup = 'BizTalk Application Users'; Account = '<DOMAIN>\<IN PROCESS ACCOUNT>'; Is32Bit = $false; Trusted = $true; Tracking = $false; Default = $false }
-            @{ Name = 'GcSxPrioHost64'; Type = 'InProcess'; WindowsGroup = 'BizTalk Application Users'; Account = '<DOMAIN>\<IN PROCESS ACCOUNT>'; Is32Bit = $false; Trusted = $true; Tracking = $false; Default = $false }
-        )
-    }
-    ServiceFabric = @{
-        Modules = @( 
-            @{ Name = 'ServiceFabricDsc'; Version = '1.0.0.1' }
-        )
-        ProductName = '???'
-        ProductId = '???'
-        SourcePath = '\\???\???'
-    }
-    SqlServer = @{
-        Modules = @( 
-            @{ Name = 'xFailoverCluster'; Version = '1.16.0' } # TODO: There is a version 1.17.0 that enables placing cluster nodes in desired AD OU, need som OS love
-            @{ Name = 'SqlServerDsc'; Version = '15.2.0' }
-        )
-        SourcePath = 'C:\Users\Public\Public Media\SQL Server 2019'
-        ConfigureWindowsFirewall = $true
-        SQLUserDBDir = $null
-        SQLUserDBLogDir = $null
-        SQLTempDBDir = $null
-        SQLTempDBLogDir = $null
-        FailoverClusterName = 'CLUSQL'
-        FailoverClusterIPAddress = '192.168.1.200'
-        FailoverClusterIgnoreNetwork = '10.0.3.0/16'
-        SqlInstances = @(
-            @{
-                Name = 'MSSQLSERVER'
-                Features = 'SQLENGINE'
-                AsServerMode = 'TABULAR'
-                MaxDop = 0
-                TcpPort = 1433
-                EndPointIPAddress = $null
-                EndPointPort = $null
-                Logins = @();
-            }
+            @{ Name = 'GcIxHost'; Type = 'Isolated'; WindowsGroup = '<DOMAIN>\TBD'; Account = '<DOMAIN>\TBD'; Is32Bit = $false; Trusted = $true; Tracking = $false; Default = $false }
+            @{ Name = 'GcCxHost'; Type = 'InProcess'; WindowsGroup = '<DOMAIN>\TBD'; Account = '<DOMAIN>\TBD'; Is32Bit = $true; Trusted = $true; Tracking = $false; Default = $false }
+            @{ Name = 'GcCxHost64'; Type = 'InProcess'; WindowsGroup = '<DOMAIN>\TBD'; Account = '<DOMAIN>\TBD'; Is32Bit = $false; Trusted = $true; Tracking = $false; Default = $false }
+            @{ Name = 'GcRxHost'; Type = 'InProcess'; WindowsGroup = '<DOMAIN>\TBD'; Account = '<DOMAIN>\TBD'; Is32Bit = $true; Trusted = $true; Tracking = $false; Default = $false }
+            @{ Name = 'GcRxHost64'; Type = 'InProcess'; WindowsGroup = '<DOMAIN>\TBD'; Account = '<DOMAIN>\TBD'; Is32Bit = $false; Trusted = $true; Tracking = $false; Default = $false }
+            @{ Name = 'GcSxHost'; Type = 'InProcess'; WindowsGroup = '<DOMAIN>\TBD'; Account = '<DOMAIN>\TBD'; Is32Bit = $true; Trusted = $true; Tracking = $false; Default = $false }
+            @{ Name = 'GcSxHost64'; Type = 'InProcess'; WindowsGroup = '<DOMAIN>\TBD'; Account = '<DOMAIN>\TBD'; Is32Bit = $false; Trusted = $true; Tracking = $false; Default = $false }
+            @{ Name = 'GcSxPrioHost64'; Type = 'InProcess'; WindowsGroup = '<DOMAIN>\TBD'; Account = '<DOMAIN>\TBD'; Is32Bit = $false; Trusted = $true; Tracking = $false; Default = $false }
         )
     }
     Windows = @{

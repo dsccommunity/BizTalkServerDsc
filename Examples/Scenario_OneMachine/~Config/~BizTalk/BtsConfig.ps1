@@ -8,6 +8,7 @@ configuration BtsConfig {
         [string]$ConfigurationFile,
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()]
         [string]$ConfigurationLog,
+        [string]$TmsAccount,
         [string[]]$DependsOnResource
     )
 
@@ -85,6 +86,12 @@ configuration BtsConfig {
                 throw $errorMessage
             }
 
+            if ($TmsAccount) {
+                Write-Verbose ("Temporarily adding TMS Account '$($using:TmsAccount)' to local Administrators group")
+
+                Add-LocalGroupMember -Group 'Administrators' -Member $using:TmsAccount 
+            }
+
             $processStartInfoArgs = "-u `"$using:SetupCredentialAccount`" -p `"$using:SetupCredentialPassword`"" +
                 " -h -i -accepteula `"$btsConfigurationExecutable`"  /noprogressbar /s `"$btsConfigurationFile`" /l `"$btsConfigurationLog`""
             $processStartInfo = New-Object System.Diagnostics.ProcessStartInfo -Property @{
@@ -108,10 +115,25 @@ configuration BtsConfig {
 
             $process.Start(); $process.WaitForExit()
 
+            function Remove-TmsAccountFromLocalAdministrators {
+                param(
+                    [string]$TmsAccount
+                )
+                if ($TmsAccount) {
+                    Remove-LocalGroupMember -Group 'Administrators' -Member $TmsAccount 
+            
+                    Write-Verbose ("Removed TMS Account '$TmsAccount' from local Administrators group")
+                }
+            }
+            
             if ($process.ExitCode -eq 0) {
+                Remove-TmsAccountFromLocalAdministrators -TmsAccount $using:TmsAccount
+
                 Write-Verbose $process.StandardOutput.ReadToEnd()
                 Write-Verbose "Succeeded to configure BizTalk"
             } else {
+                Remove-TmsAccountFromLocalAdministrators -TmsAccount $using:TmsAccount
+
                 Write-Verbose $process.StandardError.ReadToEnd()
 
                 Get-Process Configuration | Stop-Process -Force
