@@ -5,6 +5,9 @@
 
 [DscResource()]
 class BizTalkServerReceiveHandler{
+    [DscProperty(Mandatory)]
+    [PSCredential]$PsDscRunAsCredential
+
     [DscProperty(Key)]
     [string]$Adapter
 
@@ -14,23 +17,20 @@ class BizTalkServerReceiveHandler{
     [DscProperty(Mandatory)]
     [Ensure]$Ensure
 
-    [DscProperty()]
-    [PSCredential]$Credential
-
     [string]$namespace = 'ROOT\MicrosoftBizTalkServer'
 
     [void]Set() {
-        $session = New-CimSession -Credential $this.Credential
+        $session = New-CimSession -Credential $this.PsDscRunAsCredential
 
         if ($this.Ensure -eq [Ensure]::Present) {
             Write-Verbose "Create MSBTS_ReceiveHandler $($this.Adapter) on $($this.Host)"
 
             $instanceClass = Get-CimClass -Namespace $this.namespace –ClassName MSBTS_ReceiveHandler -CimSession $session
             $properties = @{
-                AdapterName = $this.Adapter;
-                HostName = $this.Host;
-                MgmtDbNameOverride = '';
-                MgmtDbServerOverride = '';
+                AdapterName = $this.Adapter
+                HostName = $this.Host
+                MgmtDbNameOverride = ''
+                MgmtDbServerOverride = ''
                 CustomCfg = ''
             }
             $instance = New-CimInstance -CimClass $instanceClass -Property $properties -CimSession $session
@@ -52,7 +52,7 @@ class BizTalkServerReceiveHandler{
     }
 
     [bool]Test() {
-        $session = New-CimSession -Credential $this.Credential
+        $session = New-CimSession -Credential $this.PsDscRunAsCredential
         $query = "SELECT * FROM MSBTS_ReceiveHandler WHERE AdapterName='$($this.Adapter)' AND HostName = '$($this.Host)'"
         $query = $query.Replace("\", "\\")
         $instance = Get-CimInstance -Query $query -Namespace $this.namespace -CimSession $session

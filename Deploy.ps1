@@ -19,9 +19,5 @@ Copy-Item -Path "$location\$moduleName\$moduleName.psd1" -Destination "$destinat
 # Copy Resources 
 Copy-Item -Path "$location\$moduleName\DscClassResources" -Recurse "$destination\DscClassResources"
 
-# Copy Tests & Examples
-Copy-Item -Path "$location\Tests" -Destination "$destination\Test" -Recurse
-Copy-Item -Path "$location\Examples" -Destination "$destination\Examples" -Recurse
-
 # Run Script Analyzer
 Invoke-ScriptAnalyzer -Path $destination | Where-Object { $_.Severity -ne 'Information' } | Format-Table -AutoSize

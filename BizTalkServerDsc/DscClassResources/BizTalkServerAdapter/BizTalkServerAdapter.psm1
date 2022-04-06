@@ -5,6 +5,9 @@
 
 [DscResource()]
 class BizTalkServerAdapter {
+    [DscProperty(Mandatory)]
+    [PSCredential]$PsDscRunAsCredential
+
     [DscProperty(Key)]
     [string]$Name
 
@@ -14,13 +17,10 @@ class BizTalkServerAdapter {
     [DscProperty(Mandatory)]
     [Ensure]$Ensure
 
-    [DscProperty()]
-    [PSCredential]$Credential
-
     [string]$namespace = 'ROOT\MicrosoftBizTalkServer'
 
     [void]Set() {
-        $session = New-CimSession -Credential $this.Credential
+        $session = New-CimSession -Credential $this.PsDscRunAsCredential
 
         if ($this.Ensure -eq [Ensure]::Present) {
             $query = "SELECT * FROM MSBTS_AdapterSetting WHERE Name='$($this.Name)'"
@@ -32,8 +32,8 @@ class BizTalkServerAdapter {
 
                 $instanceClass = Get-CimClass -Namespace $this.namespace –ClassName MSBTS_AdapterSetting -CimSession $session
                 $properties = @{
-                    Name = $($this.Name);
-                    MgmtCLSID = $this.MgmtCLSID;
+                    Name = $this.Name
+                    MgmtCLSID = $this.MgmtCLSID
                 }
                 $instance = New-CimInstance -CimClass $instanceClass -Property $properties -CimSession $session
             } else {
@@ -57,7 +57,7 @@ class BizTalkServerAdapter {
     }
 
     [bool]Test() {
-        $session = New-CimSession -Credential $this.Credential
+        $session = New-CimSession -Credential $this.PsDscRunAsCredential
         $query = "SELECT * FROM MSBTS_AdapterSetting WHERE Name='$($this.Name)' AND MgmtCLSID = '$($this.MgmtCLSID)'"
         $query = $query.Replace("\", "\\")
         $instance = Get-CimInstance -Query $query -Namespace $this.namespace -CimSession $session

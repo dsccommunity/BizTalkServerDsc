@@ -34,7 +34,7 @@ Module for managing BizTalk Server resources. BizTalk Server must be installed o
 ### BizTalkServerAdapter
 
 * **Name**: The name of adapter.
-* **MgmtCLSID**: Class Id of the BizTalk Server adapter. TODO: This needs more explaining
+* **MgmtCLSID**: Class Id of the BizTalk Server adapter.
 * **Ensure**: Present or Absent.
 * **Credential**: PSCredentials
 

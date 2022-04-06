@@ -5,6 +5,9 @@
 
 [DscResource()]
 class BizTalkServerHostInstance {
+    [DscProperty(Mandatory)]
+    [PSCredential]$PsDscRunAsCredential
+
     [DscProperty(Key)]
     [string]$Host
 
@@ -17,15 +20,15 @@ class BizTalkServerHostInstance {
     [string]$namespace = 'ROOT\MicrosoftBizTalkServer'
 
     [void]Set() {
-        $session = New-CimSession -Credential $this.Credential
+        $session = New-CimSession -Credential $this.PsDscRunAsCredential
 
         if ($this.Ensure -eq [Ensure]::Present) {
             $instanceClass = Get-CimClass -Namespace $this.namespace –ClassName MSBTS_ServerHost -CimSession $session
             $properties = @{
-                ServerName = $($env:COMPUTERNAME);
-                HostName = $($this.Host);
-                MgmtDbNameOverride='';
-                MgmtDbServerOverride='';
+                ServerName = $Env:COMPUTERNAME
+                HostName = $this.Host
+                MgmtDbNameOverride = ''
+                MgmtDbServerOverride = ''
             }
 
             Write-Verbose "Create MSBTS_ServerHost $($this.Host) Instance"
@@ -41,10 +44,10 @@ class BizTalkServerHostInstance {
             $instanceClass = Get-CimClass -Namespace $this.namespace –ClassName MSBTS_HostInstance -CimSession $session
             $name = "Microsoft BizTalk Server $($this.Host) $($env:COMPUTERNAME)"
             $properties = @{
-                Name = $name;
-                HostName = $($this.Host);
-                MgmtDbNameOverride='';
-                MgmtDbServerOverride='';
+                Name = $name
+                HostName = $($this.Host)
+                MgmtDbNameOverride = ''
+                MgmtDbServerOverride = ''
             }
 
             Write-Verbose "Create MSBTS_HostInstance $($this.Host)"
@@ -87,10 +90,10 @@ class BizTalkServerHostInstance {
 
             $instanceClass = Get-CimClass -Namespace $this.namespace –ClassName MSBTS_ServerHost -CimSession $session
             $properties = @{
-                ServerName = $($env:COMPUTERNAME);
-                HostName = $($this.Host);
-                MgmtDbNameOverride='';
-                MgmtDbServerOverride='';
+                ServerName = $Env:COMPUTERNAME
+                HostName = $($this.Host)
+                MgmtDbNameOverride = ''
+                MgmtDbServerOverride = ''
             }
             $instance = New-CimInstance -CimClass $instanceClass -Property $properties -ClientOnly -CimSession $session
 
@@ -99,7 +102,7 @@ class BizTalkServerHostInstance {
     }
 
     [bool]Test() {
-        $session = New-CimSession -Credential $this.Credential
+        $session = New-CimSession -Credential $this.PsDscRunAsCredential
         $query = "SELECT * FROM MSBTS_HostInstance WHERE HostName='$($this.Host)' AND RunningServer='$($env:COMPUTERNAME)'"
         $query = $query.Replace("\", "\\")
         $instance = Get-CimInstance -Query $query -Namespace $this.namespace -CimSession $session

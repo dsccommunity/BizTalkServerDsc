@@ -5,6 +5,9 @@
 
 [DscResource()]
 class BizTalkServerSendHandler {
+    [DscProperty(Mandatory)]
+    [PSCredential]$PsDscRunAsCredential
+
     [DscProperty(Key)]
     [string]$Adapter
 
@@ -17,13 +20,10 @@ class BizTalkServerSendHandler {
     [DscProperty(Mandatory)]
     [Ensure]$Ensure
 
-    [DscProperty()]
-    [PSCredential]$Credential
-
     [string]$namespace = 'ROOT\MicrosoftBizTalkServer'
 
     [void]Set() {
-        $session = New-CimSession -Credential $this.Credential
+        $session = New-CimSession -Credential $this.PsDscRunAsCredential
 
         if ($this.Ensure -eq [Ensure]::Present) {
             $query = "SELECT * FROM MSBTS_SendHandler2 WHERE AdapterName='$($this.Adapter)' AND HostName = '$($this.Host)'"
@@ -35,11 +35,11 @@ class BizTalkServerSendHandler {
 
                 $instanceClass = Get-CimClass -Namespace $this.namespace –ClassName MSBTS_SendHandler2 -CimSession $session
                 $properties = @{
-                    AdapterName = $this.Adapter;
-                    HostName = $this.Host;
-                    IsDefault = $this.Default;
-                    MgmtDbNameOverride = '';
-                    MgmtDbServerOverride = '';
+                    AdapterName = $this.Adapter
+                    HostName = $this.Host
+                    IsDefault = $this.Default
+                    MgmtDbNameOverride = ''
+                    MgmtDbServerOverride = ''
                     CustomCfg = ''
                 }
                 $instance = New-CimInstance -CimClass $instanceClass -Property $properties -CimSession $session
@@ -64,7 +64,7 @@ class BizTalkServerSendHandler {
     }
 
     [bool]Test() {
-        $session = New-CimSession -Credential $this.Credential
+        $session = New-CimSession -Credential $this.PsDscRunAsCredential
         $query = "SELECT * FROM MSBTS_SendHandler2 WHERE AdapterName='$($this.Adapter)' AND HostName = '$($this.Host)' AND IsDefault = $($this.Default)"
         $query = $query.Replace("\", "\\")
         $instance = Get-CimInstance -Query $query -Namespace $this.namespace -CimSession $session

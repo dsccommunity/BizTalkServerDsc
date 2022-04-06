@@ -10,6 +10,9 @@ enum HostType {
 
 [DscResource()]
 class BizTalkServerHost {
+    [DscProperty(Mandatory)]
+    [PSCredential]$PsDscRunAsCredential
+
     [DscProperty(Key)]
     [string]$Name
 
@@ -34,13 +37,10 @@ class BizTalkServerHost {
     [DscProperty()]
     [Ensure]$Ensure = [Ensure]::Present
 
-    [DscProperty()]
-    [pscredential]$Credential
-
     [string]$namespace = 'ROOT\MicrosoftBizTalkServer'
 
     [void] Set() {
-        $session = New-CimSession -Credential $this.Credential
+        $session = New-CimSession -Credential $this.PsDscRunAsCredential
 
         if ($this.Ensure -eq [Ensure]::Present) {
             $query = "SELECT * FROM MSBTS_HostSetting WHERE Name='$($this.Name)'"
@@ -50,14 +50,14 @@ class BizTalkServerHost {
             if ($null -eq $instance) {
                 $instanceClass = Get-CimClass -ClassName MSBTS_HostSetting -Namespace $this.namespace -CimSession $session
                 $properties = @{
-                    Name = $this.Name;
-                    AuthTrusted = $this.Trusted;
-                    HostTracking = $this.Tracking;
-                    HostType = & {if ($this.Type -eq [HostType]::Inprocess) {1} else {2}};
-                    IsDefault = $this.Default;
-                    IsHost32BitOnly = $this.Is32Bit;
-                    NTGroupName = $this.WindowsGroup;
-                    MgmtDbServerOverride = '';
+                    Name = $this.Name
+                    AuthTrusted = $this.Trusted
+                    HostTracking = $this.Tracking
+                    HostType = & { if ($this.Type -eq [HostType]::Inprocess) {1} else {2} }
+                    IsDefault = $this.Default
+                    IsHost32BitOnly = $this.Is32Bit
+                    NTGroupName = $this.WindowsGroup
+                    MgmtDbServerOverride = ''
                     MgmtDbNameOverride = ''
                 }
                 $instance = New-CimInstance -CimClass $instanceClass  -Property $properties -CimSession $session
@@ -83,7 +83,7 @@ class BizTalkServerHost {
     }
 
     [bool]Test() {
-        $session = New-CimSession -Credential $this.Credential
+        $session = New-CimSession -Credential $this.PsDscRunAsCredential
         $hostType = & {if ($this.Type -eq [HostType]::Inprocess) {1} else {2}}
         $query = "SELECT * FROM MSBTS_HostSetting WHERE Name='$($this.Name)' AND AuthTrusted = $($this.Trusted) AND HostTracking = $($this.Tracking) AND HostType = $hostType AND IsHost32BitOnly = $($this.Is32Bit) AND IsDefault = $($this.Default) AND NTGroupName = '$($this.WindowsGroup)'"
         $query = $query.Replace("\", "\\")
