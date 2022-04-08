@@ -35,7 +35,7 @@ $configParams = @{
 SqlServer @configParams # NOTE: Creating configurations (.MOF files) for nodes
 
 # NOTE: For newbies, how to push config to nodes
-# Set-DscLocalConfigurationManager -Path $outputPath -Force -Verbose
+# Set-DscLocalConfigurationManager -Path $outputPath -Force -Verbose # INFO: Only has to be run once when node (server) is new
 # Start-DscConfiguration -Path $outputPath -Force -Wait -Verbose
 
 # NOTE: For newbies, how to diagnose config on nodes
