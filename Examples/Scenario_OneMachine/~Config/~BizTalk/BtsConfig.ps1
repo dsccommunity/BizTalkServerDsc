@@ -86,10 +86,15 @@ configuration BtsConfig {
                 throw $errorMessage
             }
 
-            if ($TmsAccount) {
+            $tmsAccountPushed = if ($using:TmsAccount -and 
+                !(Get-LocalGroupMember -Group 'Administrators' -Member $using:TmsAccount -EA Silent)) {
                 Write-Verbose ("Temporarily adding TMS Account '$($using:TmsAccount)' to local Administrators group")
 
-                Add-LocalGroupMember -Group 'Administrators' -Member $using:TmsAccount 
+                Add-LocalGroupMember -Group 'Administrators' -Member $using:TmsAccount
+                
+                $true
+            } else {
+                $false
             }
 
             $processStartInfoArgs = "-u `"$using:SetupCredentialAccount`" -p `"$using:SetupCredentialPassword`"" +
@@ -117,22 +122,27 @@ configuration BtsConfig {
 
             function Remove-TmsAccountFromLocalAdministrators {
                 param(
-                    [string]$TmsAccount
+                    [string]$TmsAccount,
+                    [bool]$TmsAccountPushed = $tmsAccountPushed
                 )
-                if ($TmsAccount) {
+                if ($TmsAccount -and $TmsAccountPushed) {
                     Remove-LocalGroupMember -Group 'Administrators' -Member $TmsAccount 
             
                     Write-Verbose ("Removed TMS Account '$TmsAccount' from local Administrators group")
                 }
             }
             
+            $removeTmsAccountFromLocalAdministratorsParams = @{
+                TmsAccount = $using:TmsAccount
+                TmsAccountPushed = $tmsAccountPushed 
+            }             
             if ($process.ExitCode -eq 0) {
-                Remove-TmsAccountFromLocalAdministrators -TmsAccount $using:TmsAccount
+                Remove-TmsAccountFromLocalAdministrators @removeTmsAccountFromLocalAdministratorsParams
 
                 Write-Verbose $process.StandardOutput.ReadToEnd()
                 Write-Verbose "Succeeded to configure BizTalk"
             } else {
-                Remove-TmsAccountFromLocalAdministrators -TmsAccount $using:TmsAccount
+                Remove-TmsAccountFromLocalAdministrators @removeTmsAccountFromLocalAdministratorsParams
 
                 Write-Verbose $process.StandardError.ReadToEnd()
 
