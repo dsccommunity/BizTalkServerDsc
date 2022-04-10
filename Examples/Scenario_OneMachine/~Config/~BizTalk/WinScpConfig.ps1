@@ -33,9 +33,11 @@ configuration WinScpConfig {
         GetScript = {
             $ErrorActionPreference = 'Stop'
 
+            [Reflection.Assembly]::LoadWithPartialName("System.Xml.Linq") | Out-Null
+
             $result = $using:btsSvcConfigFiles | ForEach-Object {
-                [xml]$btsSvcConfig = Get-Content -Path "${Env:ProgramFiles(x86)}\Microsoft BizTalk Server\$_"
-                $btsSvcConfig.SelectSingleNode($using:assemblyIdentiyXPath)
+                $btsSvcConfig = [System.Xml.Linq.XDocument]::Load("${Env:ProgramFiles(x86)}\Microsoft BizTalk Server\$_")
+                [System.Xml.XPath.Extensions]::XPathSelectElement($btsSvcConfig, $using:assemblyIdentiyXPath)
             } | Where-Object { $null -ne $_ }
 
             return @{
