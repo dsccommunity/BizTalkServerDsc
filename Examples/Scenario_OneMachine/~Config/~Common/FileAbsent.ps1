@@ -17,13 +17,30 @@ configuration FileAbsent {
         GetScript = {
             $ErrorActionPreference = 'Stop'
 
-            Write-Verbose "Node: $($Env:COMPUTERNAME); Domain: $($Env:USERDOMAIN); Account: $($Env:USERNAME)"
-
             $FilePath = $ExecutionContext.InvokeCommand.ExpandString($using:FilePath)
             $file = Get-ChildItem -Path $FilePath -EA Silent
 
             return @{
                 Result = !($file)
+            }
+        }
+        SetScript = {
+            $ErrorActionPreference = 'Stop'
+
+            $FilePath = $ExecutionContext.InvokeCommand.ExpandString($using:FilePath)
+
+            if ($using:Backup) {
+                $backupGuid = [System.Guid]::NewGuid().ToString()
+                $file = Get-Item $FilePath
+                $backupFile = "$($file.BaseName).$backupGuid$($file.Extension)"
+
+                Write-Verbose "Rename file '$FilePath' to '$backupFile'"
+
+                Rename-Item -Path $FilePath -NewName $backupFile  
+            } else {
+                Write-Verbose "Removing file '$FilePath'"
+
+                Remove-Item -Path $FilePath -Force
             }
         }
         TestScript = {
@@ -41,27 +58,6 @@ configuration FileAbsent {
             }
 
             return $state.Result
-        }
-        SetScript = {
-            $ErrorActionPreference = 'Stop'
-
-            Write-Verbose "Node: $($Env:COMPUTERNAME); Domain: $($Env:USERDOMAIN); Account: $($Env:USERNAME)"
-
-            $FilePath = $ExecutionContext.InvokeCommand.ExpandString($using:FilePath)
-
-            if ($using:Backup) {
-                $backupGuid = [System.Guid]::NewGuid().ToString()
-                $file = Get-Item $FilePath
-                $backupFile = "$($file.BaseName).$backupGuid$($file.Extension)"
-
-                Write-Verbose "Rename file '$FilePath' to '$backupFile'"
-
-                Rename-Item -Path $FilePath -NewName $backupFile  
-            } else {
-                Write-Verbose "Removing file '$FilePath'"
-
-                Remove-Item -Path $FilePath -Force
-            }
         }
         DependsOn = $DependsOnResource
     }

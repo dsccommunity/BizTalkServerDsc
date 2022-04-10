@@ -4,10 +4,10 @@
     <Question ID="IsSecretServer" Text="&amp;Create a new SSO system;&amp;Join an existing SSO system" Answers="Create,Join" Default="Create">
       <Answer Value="Create" GUID="{FB7268BE-82D4-4cad-8CFF-6930303DA7E2}" Selected="Yes">
         <NTCredential ID="SSOAdminGroup" DisplayName="SSO Administrator(s)" Description="This is the Administrator of the Enterprise Single Sign-On (SSO) system.">
-          <NTAccount ScopeType="105" UpLevelFlags="672" DownLevelFlags="2147516422">{{SSO_ADMIN_GROUP_DOMAIN}}{{SSO_ADMIN_GROUP}}</NTAccount>
+          <NTAccount ScopeType="105" UpLevelFlags="672" DownLevelFlags="2147516422">{{BTS_GROUP_DOMAIN}}{{SSO_ADMIN_GROUP}}</NTAccount>
         </NTCredential>
         <NTCredential ID="SSOAffiliateAdminGroup" DisplayName="SSO Affiliate Administrator(s)" Description="The SSO Affiliate Administrator must be able to create Affiliate Applications.">
-          <NTAccount ScopeType="105" UpLevelFlags="672" DownLevelFlags="2147516422">{{SSO_AFFILIATE_ADMIN_GROUP_DOMAIN}}{{SSO_AFFILIATE_ADMIN_GROUP}}</NTAccount>
+          <NTAccount ScopeType="105" UpLevelFlags="672" DownLevelFlags="2147516422">{{BTS_GROUP_DOMAIN}}{{SSO_AFFILIATE_ADMIN_GROUP}}</NTAccount>
         </NTCredential>
         <FILE ID="SSO_ID_BACKUP_SECRET_FILE" DisplayName="&amp;Backup file location:" Filter="Backup files (*.bak)|*.bak|All files (*.*)|*.*" DefaultExtension="bak" Title="" Description="Location where the master secret will be backed up" OpenFile="true">
           <Value>{{SSO_ID_BACKUP_SECRET_FILE}}</Value>
@@ -26,14 +26,14 @@
     </Question>
     <NTService ID="ENTSSO" DisplayName="Enterprise Single Sign-On Service" Description="Specify the name of the account under which the Single Sign-On (SSO) service should run. This account must be a member of the SSO Administrator(s) group.">
       <UserName>{{ENTSSO_ACCOUNT}}</UserName>
-      <Domain>{{ENTSSO_DOMAIN}}</Domain>
+      <Domain>{{BTS_ACCOUNT_DOMAIN}}</Domain>
       <Password>{{ENTSSO_PASSWORD}}</Password>
     </NTService>
     <SQL ID="SSO_DB_ID" DisplayName="SSO Database" Description="Specify the name of the SQL Server and Database that will be used as the credential store.">
       <Server>{{SSO_DB_ID_SERVER}}</Server>
       <Database>{{SSO_DB_ID_DATABASE}}</Database>
       <WindowsSecurity Editable="no">yes</WindowsSecurity>
-      <UserName>{{SSO_DB_ID_DOMAIN}}\{{SSO_DB_ID_ACCOUNT}}</UserName>
+      <UserName>{{BTS_DB_ID_DOMAIN}}\{{SSO_DB_ID_ACCOUNT}}</UserName>
       <Password>{{SSO_DB_ID_PASSWORD}}</Password>
     </SQL>
   </Feature>
@@ -42,7 +42,7 @@
       <Server>{{WMI_DB_ID_SERVER}}</Server>
       <Database>{{WMI_DB_ID_DATABASE}}</Database>
       <WindowsSecurity Editable="no">yes</WindowsSecurity>
-      <UserName>{{WMI_DB_ID_DOMAIN}}\{{WMI_DB_ID_ACCOUNT}}</UserName>
+      <UserName>{{BTS_DB_ID_DOMAIN}}\{{WMI_DB_ID_ACCOUNT}}</UserName>
       <Password>{{WMI_DB_ID_PASSWORD}}</Password>
     </SQL>
     <Question ID="CREATEORJOIN" Text="Create a &amp;new BizTalk Group;&amp;Join an existing BizTalk Group" Answers="Create,Join" Default="Create">
@@ -58,20 +58,20 @@
           <Server>{{BTS_TD_DB_ID_SERVER}}</Server>
           <Database>{{BTS_TD_DB_ID_DATABASE}}</Database>
           <WindowsSecurity Editable="no">yes</WindowsSecurity>
-          <UserName>{{BTS_TD_DB_ID_DOMAIN}}\{{BTS_TD_DB_ID_ACCOUNT}}</UserName>
+          <UserName>{{BTS_DB_ID_DOMAIN}}\{{BTS_TD_DB_ID_ACCOUNT}}</UserName>
           <Password>{{BTS_TD_DB_ID_PASSWORD}}</Password>
         </SQL>
         <NTCredential ID="BTS_ADMIN_GROUP" DisplayName="BizTalk Administrators Group" Description="The BizTalk Server Administrators Group has the least privileges necessary to perform administrative tasks included in the Configuration Framework Wizard and to administer the BizTalk Server environment after installation.">
-          <NTAccount ScopeType="105" UpLevelFlags="672" DownLevelFlags="2147483654">{{BTS_ADMIN_DOMAIN}}{{BTS_ADMIN_GROUP}}</NTAccount>
+          <NTAccount ScopeType="105" UpLevelFlags="672" DownLevelFlags="2147483654">{{BTS_GROUP_DOMAIN}}{{BTS_ADMIN_GROUP}}</NTAccount>
         </NTCredential>
         <NTCredential ID="BTS_OPERATOR_GROUP" DisplayName="BizTalk Operators Group" Description="The BizTalk Server Operators Group has the least privileges necessary to perform tasks required for operating the BizTalk Server environment after installation.">
-          <NTAccount ScopeType="105" UpLevelFlags="672" DownLevelFlags="2147483654">{{BTS_OPERATOR_DOMAIN}}{{BTS_OPERATOR_GROUP}}</NTAccount>
+          <NTAccount ScopeType="105" UpLevelFlags="672" DownLevelFlags="2147483654">{{BTS_GROUP_DOMAIN}}{{BTS_OPERATOR_GROUP}}</NTAccount>
         </NTCredential>
         <NTCredential ID="BTS_B2B_OPERATOR_GROUP" DisplayName="BizTalk B2B Operators Group" Description="The BizTalk Server B2B Operators Group has the least privileges necessary to perform tasks required for operating the BizTalk Server B2B environment after installation.">
-          <NTAccount ScopeType="105" UpLevelFlags="672" DownLevelFlags="2147483654">{{BTS_B2B_OPERATOR_DOMAIN}}{{BTS_B2B_OPERATOR_GROUP}}</NTAccount>
+          <NTAccount ScopeType="105" UpLevelFlags="672" DownLevelFlags="2147483654">{{BTS_GROUP_DOMAIN}}{{BTS_B2B_OPERATOR_GROUP}}</NTAccount>
         </NTCredential>
         <NTCredential ID="BTS_READONLY_USER_GROUP" DisplayName="BizTalk Read Only Users Group" Description="The BizTalk Server ReadOnly Users Group has the least privileges necessary to view Artifact, Service, Message and Tracking Information.">
-          <NTAccount ScopeType="105" UpLevelFlags="672" DownLevelFlags="2147483654">{{BTS_READONLY_USER_DOMAIN}}{{BTS_READONLY_USER_GROUP}}</NTAccount>
+          <NTAccount ScopeType="105" UpLevelFlags="672" DownLevelFlags="2147483654">{{BTS_GROUP_DOMAIN}}{{BTS_READONLY_USER_GROUP}}</NTAccount>
         </NTCredential>
       </Answer>
       <Answer Value="Join" GUID="{4D12E6A3-552E-4936-9DD3-59E1190FA324}" />
@@ -89,14 +89,14 @@
           <Answer Value="No" GUID="{CBF077AE-2771-473E-9E0C-D955D5EB5692}" />
         </Question>
         <NTCredential ID="BTS_HOST_GROUP" DisplayName="BizTalk Host Users Group" Description="Windows group for accounts with access to the In-Process BizTalk  hosts (hosts processes in the BizTalk Server).">
-          <NTAccount ScopeType="105" UpLevelFlags="672" DownLevelFlags="2147483654">{{BTS_HOST_GROUP_DOMAIN}}{{BTS_HOST_GROUP}}</NTAccount>
+          <NTAccount ScopeType="105" UpLevelFlags="672" DownLevelFlags="2147483654">{{BTS_GROUP_DOMAIN}}{{BTS_HOST_GROUP}}</NTAccount>
         </NTCredential>
         <Name ID="BTS_HOST_NAME" DisplayName="Ho&amp;st name:" Description="Name of the In-Process BizTalk  host (eg, BizTalkServerApplication)" Hidden="false">
           <Value>BizTalkServerApplication</Value>
         </Name>
         <NTService ID="{B64F63FA-E24E-4991-86F0-ED9F65B68A98}" DisplayName="BizTalk Host Instance Account" Description="Windows account with access to a specific In-Process BizTalk host instance. This account will be given Log on as Service rights.">
           <UserName>{{BTS_HOST_ACCOUNT}}</UserName>
-          <Domain>{{BTS_HOST_ACCOUNT_DOMAIN}}</Domain>
+          <Domain>{{BTS_ACCOUNT_DOMAIN}}</Domain>
           <Password>{{BTS_HOST_PASSWORD}}</Password>
           <IsGmsaAccount>false</IsGmsaAccount>
         </NTService>
@@ -114,14 +114,14 @@
           <Answer Value="No" GUID="{CBF077AE-2771-473E-9E0C-D955D5EB5692}" />
         </Question>
         <NTCredential ID="BTS_IHOST_GROUP" DisplayName="BizTalk Isolated Host Users Group" Description="Windows group for accounts with access to the Isolated BizTalk hosts (hosts processes not running on BizTalk Server, such as HTTP and SOAP)">
-          <NTAccount ScopeType="105" UpLevelFlags="672" DownLevelFlags="2147483654">{{BTS_ISO_HOST_GROUP_DOMAIN}}{{BTS_ISO_HOST_GROUP}}</NTAccount>
+          <NTAccount ScopeType="105" UpLevelFlags="672" DownLevelFlags="2147483654">{{BTS_GROUP_DOMAIN}}{{BTS_ISO_HOST_GROUP}}</NTAccount>
         </NTCredential>
         <Name ID="BTS_IHOST_NAME" DisplayName="Is&amp;olated Host name:" Description="Name of the Isolated BizTalk host (eg BizTalkServerIsolatedHost)" Hidden="false">
           <Value>BizTalkServerIsolatedHost</Value>
         </Name>
         <NTService ID="{D0A37CEE-F24E-4193-A19F-47B05D7EDA21}" DisplayName="BizTalk Isolated Host Instance Account" Description="Windows account with access to a specific Isolated BizTalk  host instance. This account will be given Log on as Service rights.">
           <UserName>{{BTS_ISO_HOST_ACCOUNT}}</UserName>
-          <Domain>{{BTS_ISO_HOST_ACCOUNT_DOMAIN}}</Domain>
+          <Domain>{{BTS_ACCOUNT_DOMAIN}}</Domain>
           <Password>{{BTS_ISO_HOST_PASSWORD}}</Password>
           <IsGmsaAccount>false</IsGmsaAccount>
         </NTService>
@@ -129,17 +129,32 @@
       <Answer Value="No" GUID="{5782A1A5-8578-4942-9CBB-E443A15A0B99}" />
     </Question>
   </Feature>
+    <Feature Name="RulesEngine" DisplayName="Business Rules Engine" Version="3.0" Description="BizTalk native support for declarative Business Rules." ConfigByDefault="true" ISDIRTY="true">
+    <SQL ID="{E6C5E071-D6EB-4c31-BFE6-CA16637FBEEB}" DisplayName="Rule Engine Database" Description="SQL Rule Store">
+        <Server>{{BTS_BRE_DB_ID_SERVER}}</Server>
+        <Database>{{BTS_BRE_DB_ID_DATABASE}}</Database>
+        <WindowsSecurity Editable="no">yes</WindowsSecurity>
+        <UserName>{{BTS_DB_ID_DOMAIN}}\{{BTS_BRE_DB_ID_ACCOUNT}}</UserName>
+        <Password>{{BTS_BRE_DB_ID_PASSWORD}}</Password>
+    </SQL>
+    <NTService ID="{6ABAD351-9C7B-423e-9FDE-3A5C52441C00}" DisplayName="Rule Engine Update Service" Description="Notification for the deployment/ undeployment of policies">
+        <UserName>{{BTS_BRE_ACCOUNT}}</UserName>
+        <Domain>{{BTS_ACCOUNT_DOMAIN}}</Domain>
+        <Password>{{BTS_BRE_PASSWORD}}</Password>
+      <IsGmsaAccount>False</IsGmsaAccount>
+    </NTService>
+  </Feature>
   <Feature Name="MOT" DisplayName="BAM runtime" Version="1.0" Description="Tracking data decoding service used to move tracked data and persist it for query use." />
   <Feature Name="RestApi" DisplayName="BizTalk REST APIs" Version="1.0" Description="BizTalk Server REST APIs for management and operational data" ConfigByDefault="true">
     <NTService ID="{0FAD4E63-B5DB-4C43-8569-C8F80EA266FC}" DisplayName="Management Service" Description="Management Service">
       <UserName>{{BTS_RESTAPI_ACCOUNT}}</UserName>
-      <Domain>{{BTS_RESTAPI_DOMAIN}}</Domain>
+      <Domain>{{BTS_ACCOUNT_DOMAIN}}</Domain>
       <Password>{{BTS_RESTAPI_PASSWORD}}</Password>
       <IsGmsaAccount>False</IsGmsaAccount>
     </NTService>
     <NTService ID="{CD32E455-3926-429F-A4A3-CA62462BA6EE}" DisplayName="Operational Data Service" Description="Operational Data Service">
       <UserName>{{BTS_ODS_ACCOUNT}}</UserName>
-      <Domain>{{BTS_ODS_DOMAIN}}</Domain>
+      <Domain>{{BTS_ACCOUNT_DOMAIN}}</Domain>
       <Password>{{BTS_ODS_PASSWORD}}</Password>
       <IsGmsaAccount>False</IsGmsaAccount>
     </NTService>
@@ -156,7 +171,7 @@
   <Feature Name="TMS" DisplayName="BizTalk TMS" Version="1.0" Description="BizTalk TMS" ConfigByDefault="true">
     <NTService ID="{0BC99B44-CBB4-4108-AAA6-A0AE1CC1367D}" DisplayName="BizTalk TMS" Description="BizTalk TMS">
       <UserName>{{BTS_TMS_ACCOUNT}}</UserName>
-      <Domain>{{BTS_TMS_DOMAIN}}</Domain>
+      <Domain>{{BTS_ACCOUNT_DOMAIN}}</Domain>
       <Password>{{BTS_TMS_PASSWORD}}</Password>
       <IsGmsaAccount>False</IsGmsaAccount>
     </NTService>

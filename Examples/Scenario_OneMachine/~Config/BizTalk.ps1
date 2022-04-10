@@ -1,7 +1,9 @@
 . "$PSScriptRoot\~BizTalk\BtsConfig.ps1"
 . "$PSScriptRoot\~BizTalk\BtsPatch.ps1"
 . "$PSScriptRoot\~BizTalk\BtsSetup.ps1"
+. "$PSScriptRoot\~BizTalk\WinScpConfig.ps1"
 . "$PSScriptRoot\~Common\FileAbsent.ps1"
+. "$PSScriptRoot\~Common\WinScpSetup.ps1"
 . "$PSScriptRoot\~Common\PSToolsSetup.ps1"
 . "$PSScriptRoot\~Common\GitSourceEnvVars.ps1"
 . "$PSScriptRoot\~Common\ConfigurationManager.ps1"
@@ -133,9 +135,15 @@ configuration BizTalk {
             ResourceName = 'SecretBackup'
             FilePath = $secretBackupFileName
             Backup = $true
-            DependsOnResource = if ($ConfigurationData.BizTalk.Patch) { @('[Script]BtsPatch') } else { @('[Script]BtsSetup') }
+            DependsOnResource = @('[File]WinSCPConfig')
         }
         FileAbsent @secretBackupParams
+        # INFO: Configure WinSCP for BizTalk
+        $winScpConfigParams = @{
+            SetupCredential = $SetupCredential
+            DependsOnResource = if ($ConfigurationData.BizTalk.Patch) { @('[Script]BtsPatch') } else { @('[Script]BtsSetup') }   
+        }
+        WinScpConfig @winScpConfigParams
         # INFO: Install BizTalk CU binares
         if ($ConfigurationData.BizTalk.Patch) {
             $btsPatchParams = @{
@@ -180,9 +188,15 @@ configuration BizTalk {
             ResourceName = 'BtsSetupLog'
             FilePath = $SetupLog # INFO: String expansion will accour on remote node
             Backup = $true
-            DependsOnResource = @('[Archive]PSTools')
+            DependsOnResource = @('[Package]WinScp')
         }
         FileAbsent @btsSetupLogParams
+       # INFO: Download and Setup WinSCP
+        $winScpSetupParams = @{ 
+            SetupCredential = $SetupCredential
+            DependsOnResource = @('[Archive]PSTools')
+        }
+        WinScpSetup @winScpSetupParams
         # INFO: Download and Setup PSTools
         $psToolsSetupParams = @{ 
             SetupCredential = $SetupCredential

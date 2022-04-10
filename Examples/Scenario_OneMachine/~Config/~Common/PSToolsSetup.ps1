@@ -20,7 +20,7 @@ configuration PSToolsSetup {
         Destination = $psToolsFolder
         DependsOn = @('[Registry]PSTools')
     }
-    # INFO: Set registry value to accept PSTols Eula
+    # INFO: Set registry value to accept PSTools Eula
     Registry 'PSTools' {
         PsDscRunAsCredential = $SetupCredential
         Key = 'HKEY_CURRENT_USER\SOFTWARE\Sysinternals\PsExec'

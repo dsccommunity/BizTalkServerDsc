@@ -22,8 +22,6 @@ configuration BtsConfig {
         GetScript = {
             $ErrorActionPreference = 'Stop'
 
-            Write-Verbose "Node: $($Env:COMPUTERNAME); Domain: $($Env:USERDOMAIN); Account: $($Env:USERNAME)"
-
             $getBtsMgmtDbServerSetting = @{
                 Path = 'HKLM:\SOFTWARE\Microsoft\BizTalk Server\3.0\Administration' 
                 Name = 'MgmtDBServer'
@@ -38,21 +36,6 @@ configuration BtsConfig {
             return @{
                 Result = !([string]::IsNullOrWhiteSpace($mgmtDBServer)) 
             }
-        }
-        TestScript = {
-            $ErrorActionPreference = 'Stop'
-
-            Write-Verbose "Node: $($Env:COMPUTERNAME); Domain: $($Env:USERDOMAIN); Account: $($Env:USERNAME)"
-
-            $state = [scriptblock]::Create($GetScript).Invoke()
-
-            if ($state.Result) {
-                Write-Verbose 'BizTalk is configured'
-            } else {
-                Write-Verbose 'BizTalk is not configured'
-            }
-
-            return $state.Result
         }
         SetScript = {
             $ErrorActionPreference = 'Stop'
@@ -150,6 +133,21 @@ configuration BtsConfig {
                 
                 throw "Did not succeed to configure BizTalk"
             } 
+        }
+        TestScript = {
+            $ErrorActionPreference = 'Stop'
+
+            Write-Verbose "Node: $($Env:COMPUTERNAME); Domain: $($Env:USERDOMAIN); Account: $($Env:USERNAME)"
+
+            $state = [scriptblock]::Create($GetScript).Invoke()
+
+            if ($state.Result) {
+                Write-Verbose 'BizTalk is configured'
+            } else {
+                Write-Verbose 'BizTalk is not configured'
+            }
+
+            return $state.Result
         }
         DependsOn = $DependsOnResource
     }

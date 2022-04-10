@@ -23,7 +23,7 @@ class BizTalkServerAdapter {
         $session = New-CimSession -Credential $this.PsDscRunAsCredential
 
         if ($this.Ensure -eq [Ensure]::Present) {
-            $query = "SELECT * FROM MSBTS_AdapterSetting WHERE Name='$($this.Name)'"
+            $query = "SELECT * FROM MSBTS_AdapterSetting WHERE MgmtCLSID='$($this.MgmtCLSID)'"
             $query = $query.Replace("\", "\\")
             $instance = Get-CimInstance -CimSession $session -Query $query -Namespace $this.namespace
 
@@ -36,13 +36,22 @@ class BizTalkServerAdapter {
                     MgmtCLSID = $this.MgmtCLSID
                 }
                 $instance = New-CimInstance -CimClass $instanceClass -Property $properties -CimSession $session
-            } else {
-                $instance.MgmtCLSID = $this.MgmtCLSID
+            } elseif ($instance.Name -ne $this.Name) {
+                Write-Verbose "Rename MSBTS_AdapterSetting $($this.Name)"
+
+                Remove-CimInstance -InputObject $instance -CimSession $session
+
+                $instanceClass = Get-CimClass -Namespace $this.namespace –ClassName MSBTS_AdapterSetting -CimSession $session
+                $properties = @{
+                    Name = $this.Name
+                    MgmtCLSID = $this.MgmtCLSID
+                }
+                $instance = New-CimInstance -CimClass $instanceClass -Property $properties -CimSession $session
             }
 
             Set-CimInstance -InputObject $instance
         } else {
-            $query = "SELECT * FROM MSBTS_AdapterSetting WHERE Name='$($this.Name)'"
+            $query = "SELECT * FROM MSBTS_AdapterSetting WHERE MgmtCLSID='$($this.MgmtCLSID)'"
             $query = $query.Replace("\", "\\")
             $instance = Get-CimInstance -Query $query -Namespace $this.namespace -CimSession $session
 

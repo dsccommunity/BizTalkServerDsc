@@ -23,8 +23,6 @@ configuration BtsPatch {
         GetScript = {
             $ErrorActionPreference = 'Stop'
 
-            Write-Verbose "Node: $($Env:COMPUTERNAME); Domain: $($Env:USERDOMAIN); Account: $($Env:USERNAME)"
-
             $getBtsPatchInstalledParams = @{
                 Path = 'HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*' 
             }
@@ -41,21 +39,6 @@ configuration BtsPatch {
             return @{
                 Result = $btsPatchInstalled 
             }
-        }
-        TestScript = {
-            $ErrorActionPreference = 'Stop'
-
-            Write-Verbose "Node: $($Env:COMPUTERNAME); Domain: $($Env:USERDOMAIN); Account: $($Env:USERNAME)"
-
-            $state = [scriptblock]::Create($GetScript).Invoke()
-
-            if ($state.Result) {
-                Write-Verbose 'BizTalk is patched'
-            } else {
-                Write-Verbose 'BizTalk is not patched'
-            }
-
-            return $state.Result
         }
         SetScript = {
             $ErrorActionPreference = 'Stop'
@@ -113,6 +96,21 @@ configuration BtsPatch {
 
                 throw "Did not succeed to patch BizTalk"
             } 
+        }
+        TestScript = {
+            $ErrorActionPreference = 'Stop'
+
+            Write-Verbose "Node: $($Env:COMPUTERNAME); Domain: $($Env:USERDOMAIN); Account: $($Env:USERNAME)"
+
+            $state = [scriptblock]::Create($GetScript).Invoke()
+
+            if ($state.Result) {
+                Write-Verbose 'BizTalk is patched'
+            } else {
+                Write-Verbose 'BizTalk is not patched'
+            }
+
+            return $state.Result
         }
         DependsOn = $DependsOnResource
     }

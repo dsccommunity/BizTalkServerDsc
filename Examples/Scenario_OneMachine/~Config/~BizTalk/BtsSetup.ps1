@@ -25,8 +25,6 @@ configuration BtsSetup {
         GetScript = {
             $ErrorActionPreference = 'Stop'
 
-            Write-Verbose "Node: $($Env:COMPUTERNAME); Domain: $($Env:USERDOMAIN); Account: $($Env:USERNAME)"
-
             $getBtsInstalledParams = @{
                 Path = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$($using:ProductId)" 
                 Name = 'DisplayName'
@@ -42,21 +40,6 @@ configuration BtsSetup {
             return @{
                 Result = $btsInstalled 
             }
-        }
-        TestScript = {
-            $ErrorActionPreference = 'Stop'
-
-            Write-Verbose "Node: $($Env:COMPUTERNAME); Domain: $($Env:USERDOMAIN); Account: $($Env:USERNAME)"
-
-            $state = [scriptblock]::Create($GetScript).Invoke()
-
-            if ($state.Result) {
-                Write-Verbose 'BizTalk is installed'
-            } else {
-                Write-Verbose 'BizTalk is not installed'
-            }
-
-            return $state.Result
         }
         SetScript = {
             $ErrorActionPreference = 'Stop'
@@ -114,6 +97,21 @@ configuration BtsSetup {
 
                 throw "Did not succeed to install BizTalk"
             } 
+        }
+        TestScript = {
+            $ErrorActionPreference = 'Stop'
+
+            Write-Verbose "Node: $($Env:COMPUTERNAME); Domain: $($Env:USERDOMAIN); Account: $($Env:USERNAME)"
+
+            $state = [scriptblock]::Create($GetScript).Invoke()
+
+            if ($state.Result) {
+                Write-Verbose 'BizTalk is installed'
+            } else {
+                Write-Verbose 'BizTalk is not installed'
+            }
+
+            return $state.Result
         }
         DependsOn = $DependsOnResource
     }
